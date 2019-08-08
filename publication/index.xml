@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Publications on 进击的加菲猫</title>
+    <link>https://byjiang.com/publication/</link>
+    <description>Recent content in Publications on 进击的加菲猫</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2019</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/publication/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>STM: SpatioTemporal and Motion Encoding for Action Recognition</title>
+      <link>https://byjiang.com/publication/STM/</link>
+      <pubDate>Wed, 24 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/publication/STM/</guid>
+      <description>&lt;!-- Further details on your publication can be written here using *Markdown* for formatting. This text will be displayed on the Publication Detail page. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Unsupervised domain adaptation with target reconstruction and label confusion in the common subspace</title>
+      <link>https://byjiang.com/publication/Unsupervised-domain-adaptation-with-target-reconstruction-and-label-confusion-in-the-common-subspace/</link>
+      <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/publication/Unsupervised-domain-adaptation-with-target-reconstruction-and-label-confusion-in-the-common-subspace/</guid>
+      <description>&lt;!-- Further details on your publication can be written here using *Markdown* for formatting. This text will be displayed on the Publication Detail page. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Joint Domain Alignment and Discriminative Feature Learning for Unsupervised Deep Domain Adaptation</title>
+      <link>https://byjiang.com/publication/JDDA/</link>
+      <pubDate>Thu, 01 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/publication/JDDA/</guid>
+      <description>&lt;!-- Further details on your publication can be written here using *Markdown* for formatting. This text will be displayed on the Publication Detail page. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Parameter Transfer Extreme Learning Machine based on Projective Model</title>
+      <link>https://byjiang.com/publication/Parameter-Transfer-Extreme-Learning-Machine-based-on-Projective-Model/</link>
+      <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/publication/Parameter-Transfer-Extreme-Learning-Machine-based-on-Projective-Model/</guid>
+      <description>&lt;!-- Further details on your publication can be written here using *Markdown* for formatting. This text will be displayed on the Publication Detail page. --&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

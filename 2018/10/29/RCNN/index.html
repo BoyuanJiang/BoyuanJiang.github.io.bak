@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/10/29/RCNN/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/10/29/RCNN/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/10/29/RCNN/">
+  <meta property="og:title" content="RCNN | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-10-29T10:10:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-10-29T10:10:00&#43;08:00">
+  
+
+  
+
+  <title>RCNN | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">RCNN</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-10-29 10:10:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Oct 29, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=RCNN&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f10%2f29%2fRCNN%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f10%2f29%2fRCNN%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f10%2f29%2fRCNN%2f&amp;title=RCNN"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f10%2f29%2fRCNN%2f&amp;title=RCNN"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=RCNN&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f10%2f29%2fRCNN%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>RCNN可以看作是第一篇将深度学习的思想应用于目标检测的论文。相比于之前最好的目标检测算法mAP提高了30%。
+</p>
+
+<p><img src="https://file.byjiang.com/RCNN_001.JPG" alt="pipeline" /></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>早期的目标检测的做法一般是将多个低层和高层的特征融合到一块。RCNN则是先通过一个selective search算法选择一系列可能存在目标的区域，然后将这些可能存在目标的区域先后通过一个DCNN，</p>
+
+<h1 id="module-design">Module design</h1>
+
+<p>在RCNN中，region proposal使用的是selective search方法。在特征提取阶段，将每个前一阶段提取出来的region通过一个DCNN(论文中使用的是一个在ImageNet上预训练的AlexNet)得到一个4096维的特征向量。在测试阶段，会使用ss提取大约2000个候选区域。对于每个区域，通过一个DCNN提取一个特征向量，然后将这个特征向量通过为每个类别单独训练的SVM进行打分。这个时候，对于一张图片会有2000个区域，每个区域都会有n个类别的分数。对于每个类别都会独立地进行一次NMS。</p>
+
+<h1 id="train">Train</h1>
+
+<p>整个训练的过程分为以下几步：首先在ImageNet上进行图像级别标注的训练，得到一个预训练模型。然后重新初始化最后一层网络的参数（此时最后一层为21分类），使用从VOC数据集中warped region proposals进行fine-tunning。对于所有与gt box的IOU大于0.5的region作为正样本（20个类别），其他的为负样本（背景类）。在每个batch中保持正负样本比例为32:96。最后，一旦前两阶段完成了，特征提取部分的网络权值就被固定下来了。使用提取的特征向量和对应的label可以对每一个类都训练一个SVM分类器。考虑到直接拟合整个数据集太大了，作者在训练SVM的时候使用了hard negative mining的方法。即如果分类器将某个背景区域以较大的置信度认为它是一个目标区域，则认为这是一个hard negative的样本，加入下一轮的训练中。</p>
+
+<h1 id="bounding-box-regression">Bounding-box Regression</h1>
+
+<p>在对结果的分析中，作者发现加入bounding-box regression可以将结果的mAP提升3-4个百分点。对于bounding-box regression过程，它的输入为$(P^i,G^i)$，其中$P^i=(P^i_x,P^i_y,P^i_w,P^i_h)$，分别为bbox的中心点坐标和框的宽和高。$G^i=(G^i_x,G^i_y,G^i_w,G^i_h)$为对应的gt。bbox regression通过输入pool5层的特征，学习$d_x(P),d_y(P),d_w(P),d_h(P)$这四个参数，通过这四个参数，可以建立起与predicted gt box$\hat{G}$的关系：
+$$\hat{G}_x=P_wd_x(P)+P_x   \\
+\hat{G}_y=P_hd_y(P)+P_y     \\
+\hat{G}_w=P_w\exp(d_w(P))     \\
+\hat{G}_h=P_h\exp(d_h(P))$$</p>
+
+<p>这样，我们需要回归的参数就是：
+$$t_x=(G_x-P_x)/P_w \\\
+t_y=(G_y-P_y)/P_h \\
+t_w=\log(G_w/P_w) \\
+t_h=\log(G_h/P_h)$$</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>作为在目标检测领域最早应用深度学习的方法，极大地提高了目标检测的性能，但是显而易见的是它有很多的局限性，包括：</p>
+
+<ol>
+<li>训练过程不是端到端的，整个pipeline非常的复杂</li>
+<li>region proposal的过程依赖于传统的ss算法，比较粗糙而且无法很好地利用GPU进行加速</li>
+<li>整个训练的过程非常的费时和计算资源，而且inference的速度也非常的慢</li>
+</ol>
+
+<hr />
+
+<h1 id="reference">Reference</h1>
+
+<ol>
+<li><a href="https://arxiv.org/pdf/1311.2524.pdf" target="_blank">https://arxiv.org/pdf/1311.2524.pdf</a></li>
+</ol>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e7%9b%ae%e6%a0%87%e6%a3%80%e6%b5%8b">目标检测</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

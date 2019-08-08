@@ -1,0 +1,1442 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 进击的加菲猫</title>
+    <link>https://byjiang.com/blog/</link>
+    <description>Recent content in Posts on 进击的加菲猫</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2019</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0800</lastBuildDate>
+    <atom:link href="/blog/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Motion Feature Network: Fixed Motion Filter for Action Recognition</title>
+      <link>https://byjiang.com/2019/02/24/MFNet/</link>
+      <pubDate>Sun, 24 Feb 2019 22:03:16 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2019/02/24/MFNet/</guid>
+      <description>&lt;p&gt;在商汤实习也有两个多月了，主要在做一些视频行为分析的工作。这段时间也看了不少的文章，但是由于一直没能把数据集的精度刷到足够高，所以也就一直懒得动笔写笔记。最近终于把两个主要的数据集精度提高了一些，有时间来写写最近看过的一些论文的笔记了。
+&lt;/p&gt;
+
+&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;今天想要介绍的是一篇ECCV2018的论文，这篇论文的出发点是基于TSN的方法，在RGB分支的基础上融合光流分支总能提高最终的精度，但是光流需要预先进行计算，这就极大的限制了网络的实时性。这篇文章从另一个角度出发，即是否能只使用RGB的输入，都过某些空间上的预先定义好的shift操作获得类似于光流的运动特征，进而在只使用RGB分支的基础上提高分类精度。&lt;/p&gt;
+
+&lt;h2 id=&#34;方法&#34;&gt;方法&lt;/h2&gt;
+
+&lt;p&gt;正如文章的标题，作者定义了一系列固定参数的shift模板(Fixed Motion Filter)，然后在每一层的RGB特征的空间维度上施加这些shift操作，通过将shift后的特征与相邻帧特征作差，获得的残差特征可以看做是类似于光流的运动特征。&lt;/p&gt;
+
+&lt;h3 id=&#34;motion-filter&#34;&gt;Motion Filter&lt;/h3&gt;
+
+&lt;p&gt;作者定义了一个叫motion filter的结构来获得运动特征，它采用如下的公式计算运动特征&lt;/p&gt;
+
+&lt;p&gt;$$R_l(x,y,\Delta t)=F_l(x+\Delta x,y+\Delta y, t+\Delta t)-F_l(x,y,t)$$&lt;/p&gt;
+
+&lt;p&gt;其中$\Delta x, \Delta y$是作者预先定义的，一共有五种不同的取值，分别为(0,0),(1,0),(-1,0),(0,1),(0,-1)，$t+\Delta t$和$t$表示网络输入的相邻的两帧。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/motionnet_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Motion filter实现起来其实也比较简单，只需要使用五种卷积核weight不同的depth-wise卷积就可以实现。在网络的训练过程中，这五组参数都是固定的。&lt;/p&gt;
+
+&lt;h3 id=&#34;motion-block&#34;&gt;Motion Block&lt;/h3&gt;
+
+&lt;p&gt;经过motion filter处理后的特征，channel数量是输入特征的5倍，为了能够保持在网络后续的传播中维度数保持不变，作者提出了两种融合方式，分别称为Element-wise sum和Concatenation。第一种是将得到的运动特征R使用1x1的卷积降到和输入特征一样的维度，然后进行相加。第二种是将输入特征和R拼接到一块后再用1x1的卷积进行降维到和输入特征相同的维度。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/motionnet_002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;实验&#34;&gt;实验&lt;/h2&gt;
+
+&lt;p&gt;实验使用了something-something和Jester这两个对时序建模要求比较强的数据集，因为数据集中的类别都是类似于“push something from left to right”，“push something from right to left”，因此不像kinetics，想要从单帧图像判断视频的类别是比较困难的。因此传统的C2D网络，比如ResNet-50在这类数据集上精度是比较低的。作者进行的实验是在baseline网络的基础上加上了motion block，因此整个网络虽然还是2D的，但是由于运动信息的引入，精度有了不小的提升。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/motionnet_003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>深度网络中常用的normalization总结</title>
+      <link>https://byjiang.com/2018/11/25/Normalization/</link>
+      <pubDate>Sun, 25 Nov 2018 13:06:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/25/Normalization/</guid>
+      <description>&lt;p&gt;今天看了些常用的normalization方法，顺便做个笔记记录一下。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;local-response-normalization&#34;&gt;Local Response Normalization&lt;/h1&gt;
+
+&lt;p&gt;LRN最早在AlexNet中出现，它的定义如下，其中$a_{x,y}^i$代表第i个channel，位置为(x,y)的激活值，使用与它在channel上邻近的(-n/2,n/2)个激活值对其进行normalize。$k,\alpha,\beta$都是预先定义好的超参数。
+&lt;img src=&#34;https://file.byjiang.com/normalization_001.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但是在vgg的那篇论文中，作者在sec 4.1中提到，使用LRN对结果并没有多大的提升。&lt;/p&gt;
+
+&lt;h1 id=&#34;batch-normalization&#34;&gt;Batch Normalization&lt;/h1&gt;
+
+&lt;h2 id=&#34;gradient-vanishing&#34;&gt;Gradient Vanishing&lt;/h2&gt;
+
+&lt;p&gt;深度网络在训练的时候往往存在梯度弥散的问题，尤其是当网络较深的时候，如果使用的是sigmoid激活函数，当每一层的输入绝对值较大的时候，会使输出进入函数的饱和区，在这个区域梯度就会非常小，再反向传播的时候由于连乘，最终传到前面的梯度可能就等于0了。一般为了解决这个问题可以采用这几种方式：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;使用ReLU激活&lt;/li&gt;
+&lt;li&gt;设计一个好的参数初始化策略&lt;/li&gt;
+&lt;li&gt;使用较小的学习速率&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;可以预见，如果我们可以稳定每一层输入的分布，则可以很大程度的避免训练的时候进入饱和区，加快网络的收敛。
+下面来看一下它的具体做法：&lt;/p&gt;
+
+&lt;p&gt;1.首先计算输出的tensor每一维度的均值和方差，对于全连接层，我们的tensor维度一般为[N,D]，其中N为mini-batch的size，我们沿着dimension计算会得到一个D维的mean和一个D维的var。如果位于卷积层，那么输入的维度一般为[N,H,W,C]，其中C为filter的数量，这时候是沿着filter所在的这一维进行计算mean和std，得到两个C维的向量。然后使用公式$\hat{x}^{(k)}=\frac{x^{(k)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}$对每个维度进行归一化。下图分别给出了两种情况下计算mean和var的方式。
+&lt;img src=&#34;https://file.byjiang.com/normalization_002.jpg&#34; alt=&#34;&#34; /&gt;
+2. 通常，我们会把bn放置于全连接或卷积层之后，激活函数之前
+&lt;img src=&#34;https://file.byjiang.com/normalization_003.jpg&#34; alt=&#34;&#34; /&gt;
+3. 如果单纯的对每层进行normalization，可能会破坏网络的表达能力。比如如果使用sigmoid激活，normalization之后会使输入大部分位于线性区域，从而丢失非线性映射的能力，为了避免这个问题，引入了两个可以学习的参数$\gamma,\beta$对normalization后的输出进行放缩和平移：$y^{(k)}=\gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}$。$\gamma,\beta$的shape同之前讨论的mean和var。
+4. 在训练的时候会使用滑动平均的方式维护一个全局的mean和variance，在测试的时候直接使用这个全局的mean和variance进行bn操作
+&lt;img src=&#34;https://file.byjiang.com/batch_normalization_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/batch_normalization_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;group-normalization&#34;&gt;Group Normalization&lt;/h1&gt;
+
+&lt;p&gt;Batch normalization有一个问题就是当batch size很小时（很多检测分割还有video的任务中batch size只有1或2），会造成一个batch内的mean和variance的统计不准确，从而使最终的结果变差。在GN中作者说在ResNet-50中，当batch size为2时，使用GN比BN错误率低了10.6%。下面这张图也给出了GN和BN随着batch size变化错误率的变化情况，可以看到GN基本不受batch size变化的影响，而BN当batch size变小时错误率急剧上升。
+&lt;img src=&#34;https://file.byjiang.com/normalization_004.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;之前，为了解决这个问题，有人提出了synchronized BN，就是说如果我们用8卡训练，每张卡的batch size=2，那么计算mean和variance的时候跨GPU进行计算，这样相当于就把batch size变成了16。这从一定程度上缓解了这一问题，但是这对系统设计提出了新的要求，毕竟需要在不同的卡之间进行同步操作，同时也会使异步梯度下降(asynchronous
+solvers)无法工作了。&lt;/p&gt;
+
+&lt;p&gt;GN的原理和BN其实非常的像，只是GN会把所有的channels分成G个group，每个group内有C/G个channels。在计算mean和variance的时候是沿着(H,W)，同时在每张图片的一个C/G个channels的group内计算。因为跟batch size无关了，所以就不需要像bn那样维护两个统计信息，mean和variance供inference的时候使用了。其他的部分和bn基本相同，也有两个可学习的参数$\gamma,\beta$对normalization的参数进行放缩和平移处理。代码的话实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def GroupNorm(x, gamma, beta, G, eps=1e􀀀5):
+    # x: input features with shape [N,C,H,W]
+    # gamma, beta: scale and offset, with shape [1,C,1,1]
+    # G: number of groups for GN
+    N, C, H, W = x.shape
+    x = tf.reshape(x, [N, G, C // G, H, W])
+    mean, var = tf.nn.moments(x, [2, 3, 4], keep_dims=True)
+    x = (x * mean) / tf.sqrt(var + eps)
+    x = tf.reshape(x, [N, C, H, W])
+    return x * gamma + beta
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从下面这张图也可以看出几种常见的normalization方法的区别，其中layer norm和instance norm可以看作是group norm的特例，一个是group的数量取1，这样所有的channels都在一个group内进行计算，另一个则是group取C，也就是每个channel单独计算mean和variance。
+&lt;img src=&#34;https://file.byjiang.com/normalization_005.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1502.03167&#34; target=&#34;_blank&#34;&gt;Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1803.08494&#34; target=&#34;_blank&#34;&gt;Group Normalization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf&#34; target=&#34;_blank&#34;&gt;LRN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/35005794&#34; target=&#34;_blank&#34;&gt;全面解读Group Normalization(知乎)&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>MobileNet v1 &amp; v2</title>
+      <link>https://byjiang.com/2018/11/21/MobileNet/</link>
+      <pubDate>Wed, 21 Nov 2018 16:05:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/21/MobileNet/</guid>
+      <description>&lt;p&gt;MobileNet是Google推出的一种比较适合在移动设备上使用的小型化网络，具有较少的计算量和较低的带宽延迟。目前已经出到了第二版。本文会首先回顾一下v1的设计思想，然后与v2对比看看有什么升级的地方。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;mobilenet-v1&#34;&gt;MobileNet v1&lt;/h1&gt;
+
+&lt;h2 id=&#34;depthwise-separable-convolution&#34;&gt;Depthwise Separable Convolution&lt;/h2&gt;
+
+&lt;p&gt;传统的卷积神经网络(如alexnet，vgg等)使用的是标准的卷积层，我们首先计算一下传统的卷积一层的计算量，这里只考虑乘法的计算量：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;input features: h*w*m&lt;/li&gt;
+&lt;li&gt;filters: k*k*m*n&lt;/li&gt;
+&lt;li&gt;output features: h*w*n&lt;/li&gt;
+&lt;li&gt;compute cost: h*w*k*k*m*n&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;相较于传统的标准卷积，MobileNet v1提出了一种叫Depthwise Separable Convolution的操作，它实际是把标准的卷积层拆分成了两层，第一层称为depthwise convolution，它实际上是在每一个channel(depth)上单独做卷积，可以理解为在一个平面上做卷积。每个卷积核的大小为k*k*1，一共有m个这样的卷积。对于h*w*m的输入，经过depthwise convolution layer之后，输出的feature map为h*w*m，这一层的计算量为h*w*m*k*k。第二层使用若n个1
+*1*m的卷积核进行通道整合，称为pointwise convolution layer。这一层的输出为h*w*n，计算量为h*w*m*n。因此，对于Depthwise Separable Convolution，我们可以得到如下的计算量：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;input features: h*w*m&lt;/li&gt;
+&lt;li&gt;depthwise filters: k*k*1*m&lt;/li&gt;
+&lt;li&gt;depthwise output: h*w*m&lt;/li&gt;
+&lt;li&gt;pointwise filters: 1*1*m*n&lt;/li&gt;
+&lt;li&gt;pointwise output: h*w*n&lt;/li&gt;
+&lt;li&gt;compute cost: h*w*k*k*m+h*w*m*n&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果我们把Depthwise Separable Convolution的计算量与标准卷积的相除，就可以得到以下的结论：
+$$\frac{h*w*k*k*m+h*w*m*n}{h*w*k*k*m*n}=\frac{1}{n}+\frac{1}{k^2}$$&lt;/p&gt;
+
+&lt;p&gt;论文中k=3，n为卷积核的数量，一般是个比较大的数，这样相比于标准卷积，深度分离的卷积计算量只有前者的1/9。较少的乘法计算量带来的好处就是计算的速度大大提升了。因为在卷积的具体实现时，最终调用的都是general matrix multiply
+(GEMM) functions。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/mobilenet_001.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;width-multiplier-thinner-models&#34;&gt;Width Multiplier: Thinner Models&lt;/h2&gt;
+
+&lt;p&gt;尽管使用深度分离卷积已经大大地减少了计算量，但是作者还另外引入了两个方法来进一步控制计算量。其中第一个参数为width multiplier，$\alpha \in(0,1]$，它的作用是使网络的每一层变得更“瘦”。原文中，作者对于一个channel为m的输入层，输入的channel为$\alpha m$，输出的channel为$\alpha n$。因此计算量变为$h*w*k*k* \alpha m+h*w*\alpha m*\alpha n$，但是从实际实现的代码来看，depthwise那层使用的是控制量为&lt;a href=&#34;https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/kernels/depthwise_conv_op.cc#L324&#34; target=&#34;_blank&#34;&gt;channel_multiplier&lt;/a&gt;，是个取值大于等于1的int型变量，只有pointwise那层才有width multiplier这个变量，所以不知道原文中这里是否是写错了？&lt;/p&gt;
+
+&lt;h2 id=&#34;resolution-multiplier&#34;&gt;Resolution Multiplier&lt;/h2&gt;
+
+&lt;p&gt;这个比较好理解，就是把输入图片的分辨率进行缩放，$\rho$，这样就使后面每层的计算量都减少了$\rho^2$倍&lt;/p&gt;
+
+&lt;h2 id=&#34;experiments&#34;&gt;Experiments&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/mobilenet_002.jpg&#34; alt=&#34;&#34; /&gt;
+上面的两张表格将MobileNet v1与一些常见的标准卷积网络进行了对比，可以得到以下的几点结论：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;完整版的MobileNet与VGG 16的性能相当，但是后者的参数量和计算量是前者的十几倍&lt;/li&gt;
+&lt;li&gt;0.5x的MobileNet与AlexNet的性能相当，但是后者的参数量与计算量也是前者的几十倍&lt;/li&gt;
+&lt;li&gt;同样主打轻量级应用的squeezenet，虽然拥有更少的参数量，但是计算量却非常高，因此看一个网络的大小不能单纯的只看网络的参数量&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/mobilenet_003.jpg&#34; alt=&#34;&#34; /&gt;
+而在目标检测任务上，相比于使用VGG作为backbone，性能还是有一定差距的，不过与Inception v2差不多。&lt;/p&gt;
+
+&lt;h1 id=&#34;mobilenet-v2&#34;&gt;MobileNet v2&lt;/h1&gt;
+
+&lt;p&gt;v2是Google时隔一年后推出的改进版，主要的变化是引入了一种叫inverted residual structure，下面首先介绍一下这种结构与传统的residual structure的异同。&lt;/p&gt;
+
+&lt;h2 id=&#34;inverted-residual-with-linear-bottlenecks&#34;&gt;Inverted Residual with Linear Bottlenecks&lt;/h2&gt;
+
+&lt;p&gt;Inverted residual的输入为一个低维的压缩表征，首先会经过一个expansion layer将其在高维展开，然后将expand后的高维特征与之前介绍过的轻量级的lightweight depthwise convolution进行卷积，然后再将卷积后的特征重新映射回低维，其中要注意的是这一层卷积之后并没有跟随任何非线性的激活函数，作者将这个称为linear bottlenecks。我们知道，常见的卷积神经网络每个卷积层之后都会跟随一个非线性激活层，如常用的ReLU，那为什么这里最后一层不使用任何激活呢？&lt;/p&gt;
+
+&lt;p&gt;我们知道，ReLU会使特征中小于0的部分都变为0，当特征的channel数较低时，会有相对较高的概率导致某些channel被整体置0，而一旦某个channel都被置0，那么一定就会导致所能描述的特征容量的下降。同时也会使反向时梯度变为0，filter也就学不动了。除了理论上的分析证明，文中也用一个小小的例子对这一现象进行了描述，下图最左边是原始的输入特征，之后分别用一个随机矩阵$T$映射到n维空间，然后跟随一个ReLU激活，时候再用$T^-1$映射回原始的输入空间，可以看到当映射的空间维度较低时（如n=2,3，5）时，映射回原空间后信息丢失量比较多，而映射到较高维的空间后(n=15,30)，则能保留大部分的特征信息。
+&lt;img src=&#34;https://file.byjiang.com/mobilenet_004.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这就引出了v2对传统residual structure的第二个改进，即首先会把输入的特征通过1x1的卷积映射到一个高维空间，通过expansion factor $t$进行控制，文中$t=6$，然后在这个高维空间进行depthwise convolution，这样即使使用了RuLU也可以确保大部分信息不丢失，最后再将其映射回输入的低维空间。下图是两种residual structure的对比示意图：
+&lt;img src=&#34;https://file.byjiang.com/mobilenet_005.jpg&#34; alt=&#34;&#34; /&gt;
+可以看到，传统的residual structure是输入和输出的channel较多，而中间部分的channel较少，而inverted residual structure则刚好相反，两边channe较少，中间的特征channel比较多。&lt;/p&gt;
+
+&lt;p&gt;下面这张图则给出了v2与其他几种网络在convolution blocks设计上的区别：
+&lt;img src=&#34;https://file.byjiang.com/mobilenet_006.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;running-time-cost&#34;&gt;Running time cost&lt;/h2&gt;
+
+&lt;p&gt;假设block的输入为h x w，expansion factor为t，输入的维度为d&amp;rsquo;，输出的维度为d&amp;rdquo;，中间的depthwise convolution filter size为k，那么总的计算量就是：h*w*d&amp;rsquo;*t*(d&amp;rsquo;+k*k+d&amp;rdquo;)。&lt;/p&gt;
+
+&lt;h2 id=&#34;memory-efficient-inference&#34;&gt;Memory efficient inference&lt;/h2&gt;
+
+&lt;p&gt;v2还有一个特点就是其对内存带宽比较友好，在文中的section 5.1作者说到&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In what follows we show that if we treat a bottleneck residual block as a single operation (and treat inner convolution as a disposable tensor), the total amount of memory would be dominated by the size of bottleneck tensors, rather than the size of tensors that are internal to bottleneck (and much larger).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而v2采用的inverted residual structure在输入和输出的位置维度都比较低，相比于传统的residual structure输入和输出的维度较高，其对带宽的需求明显更少。&lt;/p&gt;
+
+&lt;h2 id=&#34;experiments-1&#34;&gt;Experiments&lt;/h2&gt;
+
+&lt;p&gt;作者首先对比了v2与其他网络在ImageNet上的表现，可以看出相比于v1，计算的速度更快了，精度也提高了1个多点。
+&lt;img src=&#34;https://file.byjiang.com/mobilenet_007.jpg&#34; alt=&#34;&#34; /&gt;
+对于不同的shortcut连接还有非线性激活对bottleneck layer的影响，作者分别进行了ablation study，可以看出使用线性激活和较低的维度进行shortcut连接有助于性能的提升。
+&lt;img src=&#34;https://file.byjiang.com/mobilenet_008.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h1&gt;
+
+&lt;p&gt;MobileNet v1使用depthwise convolution+pointwise convolution在达到相近表达能力的情况下大大减少了卷积层的计算量，而v2提出的inverted residual structure则允许我们将网络的表达(通过expansion layers)与网络的容量(通过bottleneck inputs)进行了解耦。总的来说这是两篇非常不错的paper，推荐大家有时间可以再细细的去看一遍原文。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1704.04861&#34; target=&#34;_blank&#34;&gt;MobileNet v1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1801.04381&#34; target=&#34;_blank&#34;&gt;MobileNet v2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet&#34; target=&#34;_blank&#34;&gt;official implement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/265709710&#34; target=&#34;_blank&#34;&gt;知乎讨论&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>R-FCN</title>
+      <link>https://byjiang.com/2018/11/17/R-FCN/</link>
+      <pubDate>Sat, 17 Nov 2018 21:05:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/17/R-FCN/</guid>
+      <description>&lt;p&gt;R-FCN主要的贡献在于保证精度基本不变的前提下，inference的速度有了两倍以上的提升。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;标准的faster rcnn（这里特指&lt;strong&gt;Deep Residual Learning for Image Recognition&lt;/strong&gt;[1]里面提出的基于resnet骨干的，与最早在faster-rcnn那篇论文中提出的方法稍有区别）可以看做由两部分构成，前一半的网络用于提取图片的特征，其计算是可以贡献的，后面的另一半网络用于对每一个ROI区域单独计算类别概率和bounding box的位置修正。由于后面那个网络是对每个ROI单独进行计算，这样计算量就会比较大，也就造成了train和inference的速度都比较慢。因此R-FCN提出了一种叫&lt;strong&gt;Position-sensitive RoI pooling&lt;/strong&gt;的操作避免了每个ROI都需要两个小网络来单独计算类别概率和位置坐标的问题，在提速的同时保证了精度的基本不变。&lt;/p&gt;
+
+&lt;p&gt;在最早版本的faster rcnn[2]中,作者使用了vgg16作为backbone，在最后的卷积层之后接了两个全连接层分别用来预测类别和坐标修正，两者之间使用ROI pooling层进行相连。但是后来发现如果使用全部的卷积层来构建backbone，在ROI pooling之后没有任何隐层，检测的正确率其实是比较低的。文中作者的原话是：However, as empirically investigated in this work, this naïve solution turns out to have considerably inferior detection accuracy that does not match the network’s superior classification accuracy. 为了解决这一问题，在resnet的那篇paper中[1]，作者将ROI pooling的位置进行了前移， 放到了conv4_x的最后的conv5_x开始的位置，这样做虽然提高了AP，但是无疑也增加了计算量，因为ROI pooling之后的特征没法共享，每个ROI区域都需要单独计算。因此，这就出现了一对矛盾：如果把ROI pooling层放到最后面去，后面不再跟其他的hidden layers，那么计算速度是快了，但是AP就比较低。反之，如果前移ROI pooling层的位置，后面再接一堆的hidden layers，AP是提高了，但是速度却变慢了。那么有没有办法既不增加计算量，又提高AP呢？本文就是为了解决这个矛盾提出来的。&lt;/p&gt;
+
+&lt;h1 id=&#34;method&#34;&gt;Method&lt;/h1&gt;
+
+&lt;p&gt;对于上面提到的问题，作者对于分类任务，更希望特征具有平移不变性(translation-invariant)，而对于检测任务，我们更希望特征具有平移可变性(translation-variant)。就是说，对于分类任务，一个物体如果在图片中的位置或形状发生了改变，希望它在最后的特征图的响应能基本保持不变，这样我们不会因为小的扰动而把它错分到其他的类中。但是对于检测任务，如果一个物体在原图中发生了形变，我们希望在最后的特征图中其响应也能有相应的变化，这样才能保证我们的检测出来的bounding box位置跟着改变。作者认为对于那种比较深层的特征，其对形变的敏感度比较低，也就是具有更多的translation-invariant的特性。[1]通过在较低层的位置插入ROI pooling layer打破了translation invariance，由于其后面的特征是对每个ROI单独计算，也就不再具有translation invariance。但是这种做法训练和测试时的效率都较低。这篇文章提出的Region-based Fully Convolutional Network (R-FCN)主要在faster rcnn的基础上做了以下几方面的改进，在速度和精度上取得了比较好的tradeoff。&lt;/p&gt;
+
+&lt;h2 id=&#34;position-sensitive-score-maps&#34;&gt;Position-sensitive score maps&lt;/h2&gt;
+
+&lt;p&gt;首先，resnet101的最后一层卷积层输出的channels为2048，作者首先加了一个随机初始化的1x1x1024的卷积层对通道数进行降维。然后并行的接了两个1x1，通道数为k^2*(C+1)和4*k^2的卷积层，作者将其称之为position-sensitive score maps，因此这两个maps分别是对类别和坐标的。至于这里的k结合后面的Position-sensitive RoI pooling来解释会比较好理解。&lt;/p&gt;
+
+&lt;h2 id=&#34;position-sensitive-roi-pooling&#34;&gt;Position-sensitive RoI pooling&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/rfcn_001.jpg&#34; alt=&#34;&#34; /&gt;
+Position-sensitive RoI pooling可以说是这篇文章最大的改进点了，这里我们以类别的那个分支为例(坐标的分支也是类似的)。输入的图片经过backbone后产生了一个feature maps，然后通过上面说的新加的层产生Position-sensitive score maps，它的channels为k^2(C+1)，长和宽同经过backbone产生的feature maps一样。然后我们对通过RPN网络产生的一个ROI区域做kxk的Position-sensitive RoI pooling。具体的做法是这样的，假设k=3，对于3x3中的第一块，我们使用Position-sensitive score maps做左边的那个淡绿色的特征切片中的对应区域，将里面的特征通过求average的方式得到了Position-sensitive RoI pooling后特征图中的第一块。同样的，对于第二块则采用Position-sensitive score maps中对应颜色的那个特征切片，然后在对应的位置求average&amp;hellip;&amp;hellip;最后就得到了一个k&lt;em&gt;k&lt;/em&gt;(C+1)的特征图，然后通过投票的方式得到一个C+1为的向量，文中的投票采用的是求average的方法。最后通过softmax进行归一化取最大值作为这个roi的概率。&lt;/p&gt;
+
+&lt;h1 id=&#34;experiment&#34;&gt;Experiment&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/rfcn_002.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/rfcn_003.jpg&#34; alt=&#34;&#34; /&gt;
+以上的两个表分别是在VOC还有COCO上的实验结果，可以看到相比于naive faster rcnn[2]，R-FCN和改进版的faster-rcnn[1]AP都有较大幅度的提高。而R-FCN和改进版的faster-rcnn相比虽然精度上差不多，但是速度有了2倍多的提升。&lt;/p&gt;
+
+&lt;p&gt;下面的两个图对kxk=3x3的Position-sensitive score maps进行了可视化，可以看到在3x3的格子中，左上的那块格子具有较高响应值的区域刚好就是物体(人)的左上角，下面中间那个格子对应的score map中刚好是人的中下部位的激活值较大。这样采用Position-sensitive RoI pooling，对于像figure 3这样的bounding box刚好覆盖了整个人，则投票后输出的类别概率就是人。但是像图4这种只覆盖了部分区域，投票后输出的概率就是背景。
+&lt;img src=&#34;https://file.byjiang.com/rfcn_004.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1512.03385.pdf&#34; target=&#34;_blank&#34;&gt;Deep Residual Learning for Image Recognition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1506.01497.pdf&#34; target=&#34;_blank&#34;&gt;Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1605.06409.pdf&#34; target=&#34;_blank&#34;&gt;R-FCN: Object Detection via Region-based Fully Convolutional Networks&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>YOLO v2</title>
+      <link>https://byjiang.com/2018/11/14/YOLO_v2/</link>
+      <pubDate>Wed, 14 Nov 2018 15:50:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/14/YOLO_v2/</guid>
+      <description>&lt;p&gt;这篇文章主要想记录一下YOLO算法的工作流程，文章主要基于YOLO v2来写的。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;不同于两阶段的检测算法(RCNN系列)，YOLO是一种一阶段的检测算法。它将检测问题视为一个回归问题：使用一个网络直接预测bounding box的位置和类别概率。作为一种一阶段的检测网络，它的速度也非常的快，达到了45fps。但是相比于faster rcnn，YOLO v1由于直接预测bounding box的位置，所以它在物体位置的定位上有更大的误差，因此在v2中作者对这一问题提出了改进的方法。&lt;/p&gt;
+
+&lt;h1 id=&#34;method&#34;&gt;Method&lt;/h1&gt;
+
+&lt;h2 id=&#34;grid-cell&#34;&gt;Grid cell&lt;/h2&gt;
+
+&lt;p&gt;首先，不同于RCNN系列使用selective search或者region proposal networks在原图上生成一系列可能包含物体的regions然后再做检测的方法，YOLO的做法是先将原图分成S x S个grid cell。然后对每grid cell预测$B$个bounding boxes。需要注意的是，在YOLO v1中，每个grid cell只会预测一个类，因此预测的输出为一个SxSx(B*5+C)维的向量，其中5是因为预测4个坐标向量+1个是否是object的概率。具体来说，YOLO v1的设置为S=7,B=2，这样在VOC的数据集上，YOLO的输出就是7x7x30。而在v2中，针对小目标检测比较差的情况，借鉴了rcnn的做法加入了anchor boxes。具体来说，就是把v1中最后的全连接层移除，用一个1x1的卷积层取而代之。卷积层的输出channels就是我们希望预测的类别数。同时不同于v1每个cell预测一个类别，v2中对每个bounding box预测一个类别。这样最终的输出就变成了SxSxB(5+c)，其中S=13,B=5,C为dataset的类别数。通过预测更多的bounding box和引入anchor的思想，将recall提升了7%。&lt;/p&gt;
+
+&lt;p&gt;接着让我们详细的来看一下需要预测的4个坐标还有object的概率是怎么定义的。对于4个位置的坐标，$x,y$为box的中心相对于对应的grid cell左上角的偏移，$w,h$是bounding box的相对于先验anchor宽高的偏移。对于是否为object的概率，定义为$Pr(Object)*IOU_{pred}^{truth}$来定义。因此，预测值和真实值就有以下的映射关系：
+&lt;img src=&#34;https://file.byjiang.com/yolo_001.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中$t_x,t_y,t_w,t_h,t_o$就是我们希望网络学习的5个关于bounding box的值，当该bounding box内含有物体时，则还应学习物体的类别概率。&lt;/p&gt;
+
+&lt;p&gt;此外，不同于faster rcnn中anchor boxes的长宽都是通过手工设置，比如1:1,2:1,1:2，yolo v2的anchor box的长宽是通过kmeans进行聚类生成的。比如在v2中，每个cell有5个bounding boxes，就把dataset中所有的gt boxes的长宽进行聚类，生成5个聚类中心，用这5个中心的长宽作为我们预设的anchor boxes的长宽。
+&lt;img src=&#34;https://file.byjiang.com/yolo_002.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;fine-grained-features&#34;&gt;Fine-grained features&lt;/h2&gt;
+
+&lt;p&gt;为了提高小物体的检出率，借鉴特征融合的思想，将前面低层的特征和最后的高层特征进行融合。以v2这篇论文提出的darknet-19为例，原本是直接在最后的13x13的特征图上预测，但是考虑到在这个分辨率下可能会丢失部分小目标，因此将前面的26x26的特征图通过一个passthrough layer与13x13的特征图融合。考虑到这两层的特征分辨率不同，没法直接进行融合，因此yolo的做法是先将低层的26x26x512的特征拆分成13x13x2048，然后再将其和高层的13x13x1024特征图直接在channel维度进行拼接融合。一个简单的示意图如下，假设输入的特征图为4x4x1,stride=2，那么变换后的特征图就是2x2x4。
+&lt;img src=&#34;https://file.byjiang.com/yolo_003.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;others&#34;&gt;Others&lt;/h2&gt;
+
+&lt;p&gt;为了提高mAP，文中还介绍了一些其他的tricks，比如在层与层之间加入batch norm进行正则化，加入多尺度训练，在较高的分辨率下进行预测等，作者画了张表格来说明这些改进所带来的提升，具体可以参阅原文：
+&lt;img src=&#34;https://file.byjiang.com/yolo_004.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;how-to-implement&#34;&gt;How to implement?&lt;/h1&gt;
+
+&lt;p&gt;以下会以伪代码的形式介绍一下作者在代码层面如何实现训练和预测的流程的，参考了作者的darknet版的实现，前面的backbone就是正常的卷积操作，主要的改进是在最后的loss函数计算上，这一部分代码主要在&lt;a href=&#34;https://github.com/pjreddie/darknet/blob/master/src/region_layer.c&#34; target=&#34;_blank&#34;&gt;region_layer&lt;/a&gt;中。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;当输入的图片size为416x416时，对于全卷积网络而言，其最后一层的输出为13x13x(5x(5+c))，其中C为dataset的类别数，对于voc而言就是20&lt;/li&gt;
+&lt;li&gt;将输出的tensor进行拆分，得到x,y,w,h,obj_conf,class_conf这几个子tensor，除了最后一个子tensor的维度为13x13x(5xC)，其他几个子tensor的维度都是13x13x5&lt;/li&gt;
+&lt;li&gt;接下去首先看一下yolo的total loss是什么样的，看上去很长的一串，但是仔细拆分的话其实可以看作是三部分损失的加权和。首先我们来看看$\mathbb{1}_{ij}^{obj}$, $\mathbb{1}_{ij}^{noobj}$和$\mathbb{1}_{i}^{obj}$这三个指示符分别代表什么。首先第一个是指当某个gt box落在第i个grid cell中的第j个bounding boxes中时为1，第二个是指第i个grid cell内没有gt box时为1，第三个是指gt box位于第i个grid cell时为1。那么，什么叫第i个grid cell的第j个bounding box内有物体呢？假设有一张大小为416x416的图片，有一个gt box，它的中心点为(100,200)，宽为50，高为100，那么这个中心点就位于第(ceil(&lt;sup&gt;100&lt;/sup&gt;&amp;frasl;&lt;sub&gt;416&lt;/sub&gt;*13),ceil(&lt;sup&gt;200&lt;/sup&gt;&amp;frasl;&lt;sub&gt;416&lt;/sub&gt;*13))=(4,7)个cell。但是这个cell中有若干个bounding boxes，文中使用了&amp;rdquo;responsible&amp;rdquo;这个词来表示对预测物体“负责”的bounding box。它是在这若干个bounding boxes中与gt box的iou最大的那个bounding box。对于$\mathbb{1}_{ij}^{noobj}$，并不是简单地对$\mathbb{1}_{ij}^{obj}$进行取反，因为这样做会导致训练时正负比例的差距太过悬殊，因此会将gt box与第i,j个模型预测的pred box计算iou，如果大于阈值，则不再计算这个box的no object loss。也就是说如果某个box既不用对预测物体“负责”，但是这个位置的预测框与gt box的iou又大于一定值，那么它就会被丢弃，也就是不参与任何一项损失的计算。关于最后那个$\mathbb{1}_{i}^{obj}$，其实它是yolo v1的写法，因为yolo v1对每个cell只预测一组class confidence，而到了v2中会对grid cell中的每个anchor box预测一组class confidence。从v2的代码来看，这个其实和第一个$\mathbb{1}_{ij}^{obj}$的取值应该是一样的。
+&lt;img src=&#34;https://file.byjiang.com/yolo_005.jpg&#34; alt=&#34;&#34; /&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;计算no object loss，这一部分代码&lt;a href=&#34;https://github.com/pjreddie/darknet/blob/master/src/region_layer.c#L232-L264&#34; target=&#34;_blank&#34;&gt;位于&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//计算no object loss
+for j in range(h):
+    for i in range(w):
+        for n in range(num_anchor):
+            获得当前位置对应的pred_box
+            for truth_box in gt_boxes： //遍历所有的gt boxes
+                计算truth_box与pred_box的iou，保留最大的best_iou
+            如果best_iou大于threshold，忽略，反之则计算这个位置的object confidence的loss
+            对于开始训练后的前12800张图片，即使这个位置没有object，也会额外计算一个坐标的loss
+            使用一个虚拟的truth，它的x,y为cell的中心，w,h为当前anchor的w和h
+            这样做是为了避免在训练的早期阶段网络发散，加快网络的收敛
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;计算object, coordinate and class loss，这一部分代码&lt;a href=&#34;https://github.com/pjreddie/darknet/blob/master/src/region_layer.c#L265-L317&#34; target=&#34;_blank&#34;&gt;位于&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//计算object, coordinate and class loss
+for truth_box in gt_boxes:
+    找到truth_box中心坐落在第(i,j)个grid cell中
+    //在这个grid cell中
+    for n in range(num_anchor):
+        获得这个位置的先验anchor框，与truth_box计算iou，保存最大的iou和对应的索引best_n
+        利用i,j,best_n就可以计算对应位置的pred_box与gt_box的
+        object, coordinate和class loss
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;还有一点需要说明，在上面给的代码中循环条件都写着t&amp;lt;30，是因为作者假设一张图内最多存在30个gt boxes&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1506.02640&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1506.02640&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1612.08242&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1612.08242&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://pjreddie.com/darknet/yolo/&#34; target=&#34;_blank&#34;&gt;https://pjreddie.com/darknet/yolo/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hgpvision/darknet/blob/master/src/region_layer.c&#34; target=&#34;_blank&#34;&gt;https://github.com/hgpvision/darknet/blob/master/src/region_layer.c&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>在网易实习的点滴</title>
+      <link>https://byjiang.com/2018/11/06/Internship1/</link>
+      <pubDate>Tue, 06 Nov 2018 23:49:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/06/Internship1/</guid>
+      <description>&lt;p&gt;实习时间：2018.6-2018.10&lt;/p&gt;
+
+&lt;p&gt;实习部门：网易易盾计算机视觉算法组
+&lt;/p&gt;
+
+&lt;p&gt;&amp;mdash;&amp;mdash;我是分割线&amp;mdash;&amp;mdash;&lt;/p&gt;
+
+&lt;p&gt;转眼离职回学校已经有一周多了，拖了好几天晚上终于想起来写一写实习这几个月的体验了，同时也是对自己的研一生活做一个总结，全文看起来可能会有一点啰嗦。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x00&#34;&gt;0x00&lt;/h2&gt;
+
+&lt;p&gt;首先我想说说加入易盾这个组的经历，现在想想其中也是充满了各种巧合。&lt;/p&gt;
+
+&lt;p&gt;我是17年入学的硕士，我们学校一年是分春夏秋冬四个学期的。我当时开学后不小心秋学期课选多了，然后等到了冬学期突然发现一周只剩下半天课了，然后实验室又比较水没啥事情，就想着能不能出去找个实习锻炼下顺便赚点零花钱。然后某天在知乎闲逛的时候突然刷到了一条豆豆老师（组里的一位知乎大佬）发的招人帖，看了介绍隐隐觉得这个组似乎很不错，做的事情也正是自己以后想从事的工作，于是就初生牛犊不怕虎地给豆豆老师发了个简历。等了几天没消息就在知乎上私信了一波，告诉我希望能以学业为主，等研一的暑假再来试试。当时看到这个消息还是挺郁闷的，不过现在回想起来后来经历的一些事情，还是很感谢豆豆老师当时做的决定的。&lt;/p&gt;
+
+&lt;p&gt;既然没找到实习，当时又比较空就想自己学点东西吧。那个时候实验室刚好有个博士师兄说想做迁移学习方面的研究，顺便投个会议。于是我就成了他的小跟班，帮他跑跑实验，写写论文的experiment部分，同时也花时间看了一些迁移学习方面的论文。&lt;/p&gt;
+
+&lt;p&gt;时间很快，转眼就过完年回学校了。几个月的时间也看了不少论文，觉得差不多可以尝试自己写点东西了。于是从三月份下旬开始构思，写代码，跑实验，写论文，每天的非常的忙绿，总觉得时间不够用。到了五月下旬论文的初稿大概写的差不多了，突然想到年前和豆豆老师的约定，就试着在知乎联系了一波，把简历发给豆豆老师后还不到两小时就接到了hr的电话，问我明天或者后天有没有时间来现场参加面试（真的没想到效率会这么高，当时接到电话都惊呆了）。到了面试那天坐着公交第一次去了网易园区，在园区等了快一个小时都没有等到面试官，然后才悲剧的发现自己跑错地方了（笑cry），看了邮件才发现易盾是在英飞特大厦。只能赶紧从园区跑到了英飞特。当时面我的是果汁老师，后来去了才知道果汁老师并不是属于我们组的，只是我们组长看我简历上写了有迁移学习研究的经历，而果汁老师也做过这方面的研究，就让他来面我了。整个面试过程基本上就是一种在互相交流，我也给他讲了讲自己刚写的这篇论文的思路，整体体验还是非常nice的。之后的hr面，因为当时hr正在开会，组长怕我等久了无聊就下来跟我聊了聊天，聊着聊着就发现我们不但来自一个城市，而且还是一所高中的（emmm，真的是很巧了）。&lt;/p&gt;
+
+&lt;p&gt;面试完后我就回学校继续去处理我的论文了，终于赶在入职的前一天投了出去。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x01&#34;&gt;0x01&lt;/h2&gt;
+
+&lt;p&gt;入职后的第一周主要是熟悉环境，学习了一下docker的使用。不得不说docker真的是一个非常好用的工具，它类似于一个虚拟机，可以为你的代码单独创建一个需要的运行环境，同时有没有传统的虚拟机那样巨大的性能损失，建议大家可以学习一下。同时在这一周里体会到了猪场为什么会被叫猪场，伙食真的非常的赞，每天一日三餐都不需要花钱~实习的这几个月学校的饭卡基本没怎么冲过钱。&lt;/p&gt;
+
+&lt;p&gt;一周后，组长给我了第一个任务，对线上的一个身份证识别服务进行优化，增加对非水平放置身份证识别的能力。理解原有代码的逻辑加完成新的需求花了差不多两三周的时间，代码上线后刚开始效果还不错，结果没过几天组长突然跟我说我改过的那个服务突然崩了。当时真的一脸懵逼，完全不知道到底是哪里出了问题，因为在上线前本地测试都是ok的。后来检查了崩溃前的日志后感觉应该是整个服务太臃肿了，没法handle高并发量。于是之后很长的一段时间就在跟组里的武哥一起学习模型优化方面的知识（武哥在我们组专门为大家的模型在上线前进行优化加速），做了很多工程上的优化，期间也是踩了不少的坑，深深的体会到了工业界和学校的差异，我想这也是大家在学习里跑跑demo所无法体验到的。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x02&#34;&gt;0x02&lt;/h2&gt;
+
+&lt;p&gt;关于组内的氛围，我想这也是每个想要找实习的同学比较关心的。虽然在这之前我也没有经历过别的实习，但是就第一份实习而言我还是非常满意的。首先组里的每个人关系都非常好，因为大家年龄都差不多，所以交流起来会非常的轻松，组长也非常的平易近人，平时中午去吃饭大家也都是一起去的，就像在实验室和同门之间的关系一样。&lt;/p&gt;
+
+&lt;p&gt;平时因为每个人工作就是做自己负责的一块业务，时间长了可能视野就会比较局限，因此每周三下午都会有一个固定的分享会，每次都会有一个人来分享一篇最新的论文，或者介绍一下自己最近的工作，然后大家也会一起参与讨论，从不同的角度给出自己的看法或建议。相比于一个人闭门造车，这种交流机制我觉得对一个人的成长帮助也是非常大的。&lt;/p&gt;
+
+&lt;p&gt;组内每个月也会有一到两次的团建聚餐，每个实习生走了大家也会聚餐给他践行。作为最后一个离开的实习生，这段时间蹭吃蹭喝了好多顿了（笑cry~）。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x03&#34;&gt;0x03&lt;/h2&gt;
+
+&lt;p&gt;虽然公司有固定的考勤要求，但是如果你平常有事情，只要跟组长打个招呼然后请个假就可以了，整个工作时间非常的弹性制。当然对实习生而言，加班是不存在的，之前坐我边上的实习生妹子因为就住在公司附近觉得太早回去也没什么事情就选择晚上在公司加会班，因为这事组长还“劝了”她好几次让她吃完饭就可以早点回去，同时告诉我们不要向她“学习”。因此来这边实习并不会感到太累，还是有时间做一些自己想做的事情，享受一下生活的。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x04&#34;&gt;0x04&lt;/h2&gt;
+
+&lt;p&gt;实习结束后回到实验室也跟同门的另一个在某安防大厂做计算机视觉岗的男生聊了聊，他表示以后毕业找工作肯定不会再回那个组了，于我而言，我是很愿意明年再回易盾的，毕竟组里有不会那么push你的组长和那么多有趣可爱的人儿。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x05&#34;&gt;0x05&lt;/h2&gt;
+
+&lt;p&gt;啰里啰嗦的说了挺多了，如果你心动了不如赶紧投个简历试试吧，具体的投递方式在文末的链接中。&lt;/p&gt;
+
+&lt;p&gt;PS：我走的时候组里只剩一位女生了，我觉得急需要平衡一下男女比hhh&lt;/p&gt;
+
+&lt;p&gt;PPS：听说最近组里在跟之江实验室联合申请项目，相信前方即是星辰大海！&lt;/p&gt;
+
+&lt;p&gt;PPPS：最后还要感谢大家这几个月来款待以及暑假一起实习的小伙伴们，有你们真好。&lt;/p&gt;
+
+&lt;h2 id=&#34;0x06&#34;&gt;0x06&lt;/h2&gt;
+
+&lt;p&gt;对了，入职前一天投的论文也在我离职的前一天被接受了。&lt;/p&gt;
+
+&lt;p&gt;以上。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/48570971&#34; target=&#34;_blank&#34;&gt;https://zhuanlan.zhihu.com/p/48570971&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Faster RCNN</title>
+      <link>https://byjiang.com/2018/11/06/Faster_RCNN/</link>
+      <pubDate>Tue, 06 Nov 2018 21:03:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/06/Faster_RCNN/</guid>
+      <description>&lt;p&gt;Faster RCNN是RCNN系列的第三篇，提出了Region Proposal Networks(RPN)替代传统的Selective Search算法，将检测的速度提升到了5fps.
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;在fast rcnn中，通过共享卷积层，在不计算region proposal的情况下，整个网络的速度已经近乎达到了实时。因此整个检测的瓶颈目前就在region proposal上了。在fast rcnn中，region proposal使用的是selective search算法，其在cpu上运行处理单张图片需要2s。尽管我们可以用gpu重写这一操作让它快一些，但是这并不能从根本上解决这一问题。因此本文从根本出发，既然深度神经网络这么强大，我们是否可以直接用它来完成region proposal的过程呢？答案是肯定的，本文中，作者就提出了一种叫RPN的网络来完成这一目的。这样，整个检测过程的所有部件都可以运行在GPU上了，速度也因此可以达到近乎实时。&lt;/p&gt;
+
+&lt;h1 id=&#34;architecture&#34;&gt;Architecture&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/faster_rcnn_001.jpg&#34; alt=&#34;&#34; /&gt;
+整个网络的结构如上图所示，其与fast rcnn最大的区别在于RPN网络的引进。RPN网络有点类似于最近很火的注意力机制，告诉后面的分类网需要聚焦在feature map的哪块区域。&lt;/p&gt;
+
+&lt;h2 id=&#34;rpn&#34;&gt;RPN&lt;/h2&gt;
+
+&lt;p&gt;首先让我们看看RPN网络到底是个什么东西，想明白后其实它的思想非常的简单，实现也非常的简单粗暴。以下面这张图为例
+&lt;img src=&#34;https://file.byjiang.com/faster_rcnn_002.jpg&#34; alt=&#34;&#34; /&gt;
+图中的conv feature map是backbone的最后一个卷积层，用一个3x3的卷积核作为sliding window在这个特征图上滑动，它的输出channel是256，然后对这个输出的特征向量分出两条1x1卷积的支路，一条输出的channel为2k用来预测这个anchor box是否有目标，另一条支路为每个anchor box输出4个坐标信息，共4k个channel。因为faster rcnn训练和测试的时候都只使用单一尺度的图片，为了达到多尺度的目的，就在anchor box上进行了scale和aspect ratio的变化。文中取了三种不同的scale和三种不同的aspect ratio，因此这里的k=9。这里的anchor box可以这样理解，假设图中sliding window的中间点(anchor)坐标为(50,50)，那么对于一个16x16的anchor box，这个anchor对应的box区域就应该是左上(42,42)，右下(58,58)。其他尺寸的anchor box同理可以计算出它在原图上对应的区域。这样划分的anchor box在原图上是呈现为网格状的，可能不能很好地整好覆盖每个目标，因此我们的RPN网络就是希望能够学习一个偏移量，对大概覆盖某个目标的box进行修正，使其更好地覆盖这个目标。&lt;/p&gt;
+
+&lt;p&gt;如果用PyTorch，则可以这样实现，代码&lt;a href=&#34;https://github.com/open-mmlab/mmdetection/blob/master/mmdet/models/rpn_heads/rpn_head.py&#34; target=&#34;_blank&#34;&gt;来自&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;self.rpn_conv = nn.Conv2d(in_channels, feat_channels, 3, padding=1)
+self.relu = nn.ReLU(inplace=True)
+self.num_anchors = len(self.anchor_ratios) * len(self.anchor_scales)
+out_channels = (self.num_anchors
+                if self.use_sigmoid_cls else self.num_anchors * 2)
+self.rpn_cls = nn.Conv2d(feat_channels, out_channels, 1)
+self.rpn_reg = nn.Conv2d(feat_channels, self.num_anchors * 4, 1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;loss-function&#34;&gt;Loss function&lt;/h3&gt;
+
+&lt;p&gt;为了训练RPN，我们首先需要给每个anchor box赋予一个二值的标签(是目标或不是目标)。文中按照以下的几个策略进行标签分配：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;跟某个gt box的IoU最大的那个anchor box赋予positive label&lt;/li&gt;
+&lt;li&gt;如果一个anchor box跟任意一个gt box IoU超过0.7赋予positive label&lt;/li&gt;
+&lt;li&gt;如果跟所有的gt boxes的IoU小于0.3赋予negative label&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;分配完标签后，可以定义如下的损失函数：
+&lt;img src=&#34;https://file.byjiang.com/faster_rcnn_003.jpg&#34; alt=&#34;&#34; /&gt;
+其中，$L_{cls}$是对anchor box中是否为目标分类的损失，$L_{reg}$是对anchor box坐标修正系数的预测损失，使用的是同fast rcnn一样的smooth L1 loss，注意到第二项损失函数中有一项$p_i^*$，也就是说当该anchor box为positive时才会计算对应的regression loss。关于坐标修正系数的gt，$t_i^*$，由以下的公式得到：
+&lt;img src=&#34;https://file.byjiang.com/faster_rcnn_004.jpg&#34; alt=&#34;&#34; /&gt;
+其中$x,y,w,h$分别为anchor box的中心坐标和宽，长。$x,x_a,x^*$分别为RPN网络的输出，anchor box和gt box。&lt;/p&gt;
+
+&lt;h1 id=&#34;training&#34;&gt;Training&lt;/h1&gt;
+
+&lt;p&gt;关于网络的训练，作者提出了几种不同的训练pipeline，其中比较好的方法是将RPN和Fast RCNN的训练合到一个网络中，在前向的时候，首先假设RPN网络的参数是固定的，这样就可以得到一系列的proposals，计算RPN网络的损失，然后利用这些proposals训练fast rcnn网络，将损失函数组合到一块后进行反向传播，同时更新RPN和fast rcnn部分的参数。&lt;/p&gt;
+
+&lt;p&gt;其他一些实现上的细节可以参考论文的Section 3.3&lt;/p&gt;
+
+&lt;h1 id=&#34;experiments&#34;&gt;Experiments&lt;/h1&gt;
+
+&lt;p&gt;实验结果也请看原文吧，反正就是相比前两个方法速度快了很多，精度也有了提升。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1506.01497.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1506.01497.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Fast RCNN</title>
+      <link>https://byjiang.com/2018/11/05/Fast_RCNN/</link>
+      <pubDate>Mon, 05 Nov 2018 10:28:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/05/Fast_RCNN/</guid>
+      <description>&lt;p&gt;Fast RCNN是RCNN系列的第二篇，一定程度解决了RCNN第一篇论文训练和检测速度慢的问题。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;文章的一开始首先提出了之前的的RCNN和SPPnet存在的问题：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;整个训练是有多个阶段构成，整个流程非常的麻烦&lt;/li&gt;
+&lt;li&gt;训练过程非常的耗费时间和空间。因为训练有多个阶段，进入下一个阶段前需要缓存一些上一个阶段的结果&lt;/li&gt;
+&lt;li&gt;测试时的速度也非常慢。RCNN使用GPU检测一张图也需要花费47s&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;既然有这么多的问题，本文就提出了一系列措施来进行改进，相比于之前的方法，Fast RCNN主要有以下几个优点：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;相比于RCNN和SPPnet，具有更高的mAP&lt;/li&gt;
+&lt;li&gt;使用multi-task loss将整个训练过程合为一个阶段&lt;/li&gt;
+&lt;li&gt;目前整个网络的参数都可以被更新了(之前的SPPnet在训练的过程中前几个卷积层的参数是被冻结的)&lt;/li&gt;
+&lt;li&gt;不需要额外的磁盘空间对中间的特征进行缓存&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;architecture&#34;&gt;Architecture&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/fast_rcnn_004.jpg&#34; alt=&#34;&#34; /&gt;
+Fast RCNN的整体流程如上图所示，其与传统检测网络最大的不同在于roi pooling层的引入。&lt;/p&gt;
+
+&lt;h2 id=&#34;roi-pooling-layer&#34;&gt;RoI pooling layer&lt;/h2&gt;
+
+&lt;p&gt;RoI pooling layer其实可以看作是level为1的spp layer。它的作用是对于任意大小的输入，其结果都是一个固定长度的feature vector，这样就可以跟后面的fc layer衔接，而不需要提前对特征图进行缩放到固定的大小。它的具体实现是这样的，假设我们希望不管输入的feature map多大，输出的feature map size都为7x7，那么我们就将原图分为7x7个小窗口，然后对每个小窗口实施max pooling的操作。假设输入的feature map size为hxw，那么每个小窗口的尺寸就应该是h/7 x w/7.&lt;/p&gt;
+
+&lt;h2 id=&#34;fine-tuning-for-detection&#34;&gt;Fine-tuning for detection&lt;/h2&gt;
+
+&lt;p&gt;之前提到，sppnet在训练的时候无法更新卷积层的参数。首先，并不是说原理上无法进行更新，而是由于其roi的采样策略造成了如果想要对卷积层参数进行更新，所带来的计算和显存的压力过于巨大。&lt;/p&gt;
+
+&lt;p&gt;在sppnet中，假设我们需要采集一个batch(128)的roi，会随机地从所有的roi中进行均匀采样，这样最差的情况下这128个roi可能采自128张不同的图片，这对当时的GPU而言是无法处理的（卷积层反传时需要处理128张图片）。而fast rcnn则每次先采两张图，然后从每张图中均匀的采64个proposals。这样卷积层反传时只需要处理两张图。&lt;/p&gt;
+
+&lt;h2 id=&#34;multi-task-loss&#34;&gt;Multi-task loss&lt;/h2&gt;
+
+&lt;p&gt;相比于sppnet和rcnn，fast rcnn训练的时候使用了multi-task loss，同时优化classifier和bounding box regressors。其中classifier使用log loss，而bounding box regressors使用的是smooth L1 loss，相比于L2 loss，它对异常值更不敏感。&lt;/p&gt;
+
+&lt;h1 id=&#34;inference&#34;&gt;Inference&lt;/h1&gt;
+
+&lt;p&gt;Inference阶段基本和训练阶段一致，输入一张图片和R个proposals(R=2000，typically)，然后网络输出每个regions的类别概率分布$p$和每个box的四个坐标修正量。&lt;/p&gt;
+
+&lt;h2 id=&#34;truncated-svd-for-faster-detection&#34;&gt;Truncated SVD for faster detection&lt;/h2&gt;
+
+&lt;p&gt;相比于分类任务主要的计算量在卷积层，识别任务因为有大量的region proposals需要通过fc层计算，因此整个fc层的计算量接近整个前向计算时间的一半，因此为了加快计算速度，作者提出可以通过Truncated SVD的方法减少计算量。对于一个$u$ x $v$维的全连接权重矩阵$W$，使用truncated SVD可以分解为：
+$$W\approx U \Sigma_t V^T$$
+其中$U$为$u$x$t$的矩阵，$\Sigma_t$为$t$x$t$的矩阵，$V_T$为$v$x$t$的矩阵。这样参数量就从uv减少到了t(u+v)，通常t远远小于u和v。这个简单的压缩将detection的时间减少了30%同时只有极少的性能损失，大约0.3%，这也说明了平时使用的那些网络其内部参数其实存在大量的冗余。&lt;/p&gt;
+
+&lt;h1 id=&#34;rcnn-vs-sppnet-vs-fast-rcnn&#34;&gt;RCNN vs SPPnet vs FAST RCNN&lt;/h1&gt;
+
+&lt;p&gt;以下三张图简单的总结了下这三种方法的异同，图片来自Ross Girshick在ICCV2015上的slide，在文章的最后也给出了链接：
+&lt;img src=&#34;https://file.byjiang.com/fast_rcnn_003.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/fast_rcnn_002.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/fast_rcnn_001.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1504.08083.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1504.08083.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.robots.ox.ac.uk/~tvg/publications/talks/fast-rcnn-slides.pdf&#34; target=&#34;_blank&#34;&gt;http://www.robots.ox.ac.uk/~tvg/publications/talks/fast-rcnn-slides.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>DeepBox</title>
+      <link>https://byjiang.com/2018/11/03/DeepBox/</link>
+      <pubDate>Sat, 03 Nov 2018 23:03:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/03/DeepBox/</guid>
+      <description>&lt;p&gt;DeepBox主要基于edgebox和fast-rcnn这两篇文章，对region proposal阶段进行了优化。
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/deepbox_001.jpg&#34; alt=&#34;&#34; /&gt;
+DeepBox的方法还是很简明的，核心思想如上图所示。首先使用一个bottom-up proposals方法(文中使用的是edgebox)生成一系列proposal，然后使用一个4层的卷积网络对这些区域打分，之后按照分数高低重新进行rank，最后保留前N个proposal，之后的流程就是套用fast-rcnn的部分对目标进行分类。&lt;/p&gt;
+
+&lt;h1 id=&#34;results&#34;&gt;Results&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/deepbox_002.jpg&#34; alt=&#34;&#34; /&gt;
+作者首先评估了不同的region proposal的效率，可以看到达到相同的recall，DeepBox需要的proposals是最少的。&lt;/p&gt;
+
+&lt;p&gt;之后作者在COCO Testset上进行了测试，使用500个proposals，提出的方法可以达到37.8%的mAP，而使用500个proposals的edgebox，只能达到33.3%，而使用ss算法的fast-rccn，当proposals为2000时mAP为35.8%。从中可以看出，DeepBox可以使用更少的proposals达到更大的精度。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1505.02146.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1505.02146.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>SPPNet</title>
+      <link>https://byjiang.com/2018/11/01/SPPNet/</link>
+      <pubDate>Thu, 01 Nov 2018 18:51:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/11/01/SPPNet/</guid>
+      <description>&lt;p&gt;传统的CNN网络由于全连接层的限制，要求输入的图片尺寸是固定的。因此使用时如果图片尺寸不同，就需要对图片先进行裁剪或者缩放，这往往会影响网络的性能。在本文中作者提出在最后的conv layer和fc layer之间加入spatial pyramid pooling layer来使网络可以接收任意大小的输入。
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/SPPNet_001.jpg&#34; alt=&#34;&#34; /&gt;
+SPP layer的原理其实非常的简单，以上图为例，对于最后一个卷积层的特征，将整个feature map分割成若干个小的区域（上图有三个层次，分别为16,4和1个），然后在每个小的区域内实施max pooling。然后将每个层次的输出都拼接到一块，得到一个最终的输出特征。上图的spp layer输出即为一个(16+4+1)x256维的向量。&lt;/p&gt;
+
+&lt;h1 id=&#34;so-how-to-implement&#34;&gt;So how to implement？&lt;/h1&gt;
+
+&lt;p&gt;在实际代码中，spp layer通过不同步长和size的max pooling实现。假设feature size为axa，对于一个nxn bins的pyramid level，它的max pooling size为ceil[a/n]，stride为floor[a/n]，ceil和floor分别为向上取整和向下取整。&lt;/p&gt;
+
+&lt;h1 id=&#34;classification&#34;&gt;Classification&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/SPPNet_002.jpg&#34; alt=&#34;&#34; /&gt;
+可以看到在ImageNet2012上，使用SPP相比不使用具有更低的错误率。&lt;/p&gt;
+
+&lt;h1 id=&#34;detection&#34;&gt;Detection&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/SPPNet_003.jpg&#34; alt=&#34;&#34; /&gt;
+spp应用在检测上的方法如上图所示，首先用selective search生成2000个候选框，然后将这些候选框按照最短边放缩到不同的scale，然后对每个窗口实施如图5所示的spp pooling，论文中使用的是4层金字塔结构(1x1,2x2,3x3,6x6)，一共50个bins，这样每个窗口都能得到一个固定长度的特征向量(256x50=12,800 d)。将每个特征相同通过每一类的SVM判断是否属于这一类。
+&lt;img src=&#34;https://file.byjiang.com/SPPNet_004.jpg&#34; alt=&#34;&#34; /&gt;
+图10展示了结果，可以看到和RCNN相比，在基本不损失精度的情况下，sppnet的速度快了几十倍。当然这里的速度提升主要来自于sppnet只对原图进行一次卷积的前向操作，而RCNN会对每个region进行一次前向，而spp pooling的结构则保证了精度能基本维持不变。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1406.4729.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1406.4729.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>DeepMultiBox</title>
+      <link>https://byjiang.com/2018/10/31/DeepMultiBox/</link>
+      <pubDate>Wed, 31 Oct 2018 10:20:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/10/31/DeepMultiBox/</guid>
+      <description>&lt;p&gt;在MultiBox出现之前，传统的目标检测state-of-art方法为Deformable Part Model
+(DPM)，但是想要搜索所有可能的位置以及多尺度会带来巨大的计算开销。而MultiBox正是为了在大规模数据集上应用DNN而提出来的。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;传统的目标检测算法因为需要搜索大量的区域以及尺寸带来巨大的计算量，同时会随着待检测目标类别的数量增加而更加严峻，因为这些算法通常会为每个类别单独训练一个检测器。因此，为了觉得这一瓶颈，作者提出了一种叫MultiBox的算法。在文章的一开始，作者就说到，相比于传统的检测算法，MultiBox最大的不同在于它会训练一个DNN用来生成一系列bounding box，每个box包含一个是否含有物体的置信度。&lt;/p&gt;
+
+&lt;h1 id=&#34;method&#34;&gt;Method&lt;/h1&gt;
+
+&lt;p&gt;用$l_i \in \mathbb{R}^4$和$c_i \in [0,1]$分别表示第i个物体的bounding box和对应属于物体的置信度。论文中提出的损失函数如下：
+&lt;img src=&#34;https://file.byjiang.com/multibox_001.JPG&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/multibox_002.JPG&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://file.byjiang.com/multibox_003.JPG&#34; alt=&#34;&#34; /&gt;
+其中$x_{ij}=1$代表第i个预测的bbox被分配给第j个gt bbox。通过优化下面的分配问题求解最优的$x^*$：
+&lt;img src=&#34;https://file.byjiang.com/multibox_004.JPG&#34; alt=&#34;&#34; /&gt;
+在训练上为了达到更高的精度和收敛速度，使用了一些tricks，可以参考原文。&lt;/p&gt;
+
+&lt;h1 id=&#34;results&#34;&gt;Results&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/multibox_005.JPG&#34; alt=&#34;&#34; /&gt;
+mAP为0.29&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;好像也没什么好总结的，作为一个两阶段的算法，沿用了定位+分类的思想。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Erhan_Scalable_Object_Detection_2014_CVPR_paper.pdf&#34; target=&#34;_blank&#34;&gt;https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Erhan_Scalable_Object_Detection_2014_CVPR_paper.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>OverFeat</title>
+      <link>https://byjiang.com/2018/10/30/OverFeat/</link>
+      <pubDate>Tue, 30 Oct 2018 22:52:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/10/30/OverFeat/</guid>
+      <description>&lt;p&gt;OverFeat是第一个基于深度学习的一阶段(obe stage)目标检测器，相比于同时期的RCNN，它的速度更快，但是精度则低不少。
+&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;这篇论文在一开篇就提出使用一个基于深度卷积网络的集成框架去同时解决分类，定位和检测三大任务（口气不小hhh）。具体来说就是不同的任务共用前面几个卷积层的特征，以此来减少计算量。&lt;/p&gt;
+
+&lt;h1 id=&#34;classification&#34;&gt;Classification&lt;/h1&gt;
+
+&lt;p&gt;对于分类任务，multi-view voting这种方法可以有效地提高正确率：通过对一张图片取4个角和中央，然后再水平翻转一共可以得到10张子图。但是这种方法可能会对调很多regions，同时重叠部分的计算存在冗余。而且这种方法只是处理了一种尺度，无法保证当前的尺度对卷积网络而言就是最佳的尺度。&lt;/p&gt;
+
+&lt;p&gt;基于以上的分析，作者对于分类任务提出了一种叫overfeat的方法，具体来说就是让一张图片的不同location以不同的scale通过一个卷积网络。首先给出作者设计的网络结构，分为fast和accuracy两种，这里以fast为例：
+&lt;img src=&#34;https://file.byjiang.com/OverFeat_001.JPG&#34; alt=&#34;&#34; /&gt;
+其结构基本上类似于AlexNet，只是在最后三个分类层有很大的不同。在AlexNet中，最后三个分类层使用的是fully-connected layer，而在OverFeat中，因为输入的图片可能会包含各种不同的scale，因此最后三个分类层使用的是1x1的卷积层，以tensorflow官方实现的代码为例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;  with tf.variable_scope(scope, &#39;overfeat&#39;, [inputs]) as sc:
+    end_points_collection = sc.original_name_scope + &#39;_end_points&#39;
+    # Collect outputs for conv2d, fully_connected and max_pool2d
+    with slim.arg_scope([slim.conv2d, slim.fully_connected, slim.max_pool2d],
+                        outputs_collections=end_points_collection):
+      net = slim.conv2d(inputs, 64, [11, 11], 4, padding=&#39;VALID&#39;,
+                        scope=&#39;conv1&#39;)
+      net = slim.max_pool2d(net, [2, 2], scope=&#39;pool1&#39;)
+      net = slim.conv2d(net, 256, [5, 5], padding=&#39;VALID&#39;, scope=&#39;conv2&#39;)
+      net = slim.max_pool2d(net, [2, 2], scope=&#39;pool2&#39;)
+      net = slim.conv2d(net, 512, [3, 3], scope=&#39;conv3&#39;)
+      net = slim.conv2d(net, 1024, [3, 3], scope=&#39;conv4&#39;)
+      net = slim.conv2d(net, 1024, [3, 3], scope=&#39;conv5&#39;)
+      net = slim.max_pool2d(net, [2, 2], scope=&#39;pool5&#39;)
+
+      # Use conv2d instead of fully_connected layers.
+      with slim.arg_scope([slim.conv2d],
+                          weights_initializer=trunc_normal(0.005),
+                          biases_initializer=tf.constant_initializer(0.1)):
+        net = slim.conv2d(net, 3072, [6, 6], padding=&#39;VALID&#39;, scope=&#39;fc6&#39;)
+        net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+                           scope=&#39;dropout6&#39;)
+        net = slim.conv2d(net, 4096, [1, 1], scope=&#39;fc7&#39;)
+        # Convert end_points_collection into a end_point dict.
+        end_points = slim.utils.convert_collection_to_dict(
+            end_points_collection)
+        if global_pool:
+          net = tf.reduce_mean(net, [1, 2], keep_dims=True, name=&#39;global_pool&#39;)
+          end_points[&#39;global_pool&#39;] = net
+        if num_classes:
+          net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+                             scope=&#39;dropout7&#39;)
+          net = slim.conv2d(net, num_classes, [1, 1],
+                            activation_fn=None,
+                            normalizer_fn=None,
+                            biases_initializer=tf.zeros_initializer(),
+                            scope=&#39;fc8&#39;)
+          if spatial_squeeze:
+            net = tf.squeeze(net, [1, 2], name=&#39;fc8/squeezed&#39;)
+          end_points[sc.name + &#39;/fc8&#39;] = net
+      return net, end_points
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OverFeat这篇论文最大的特点在于测试阶段使用了多尺度进行预测，训练阶段则与一般的网络训练类似。在测试阶段，对于一张图片，使用6种不同的分辨率进行测试。文中使用的尺度如下：
+&lt;img src=&#34;https://file.byjiang.com/OverFeat_002.JPG&#34; alt=&#34;&#34; /&gt;
+以scale为2这个尺度为例，它在Layer5层的pre-pool尺寸为20x23，经过一种叫dense pooling operation with $(\Delta x,\Delta y) = \{0, 1, 2\}$的操作后，变为(6x7)x(3x3)。其中第一个6x7是对20x23做一个没有overlap的3x3的max pooling，得到的feature map尺寸就是6x7，后面的3x3是因为我们在做max pooling时起始位置可以存在0-2的偏移，如下图所示：
+&lt;img src=&#34;https://file.byjiang.com/OverFeat_003.JPG&#34; alt=&#34;&#34; /&gt;
+图3展示的是其中的一个维度，也就是20那个维度，做max pooling后得到的feature长度为6，同时可以从第0个元素，第一个元素或第二个元素开始，这样就有了三种长度为6的feature。同样的也可以对长度为23的那个维度进行类似的操作。在之后的fc6层其实进行的是一个5x5的卷积操作，得到的输出map为(2)x(3)，最后把9种情况合并就变成了(6x9xc)。为了得到最终的分类结果，可以执行以下的步骤：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对每个scale的classifier map按照类别进行spatial max操作，比如对scale=2，将6x9xc沿着c取max，最终变成一个c维的向量，这里的c即为总的类别数&lt;/li&gt;
+&lt;li&gt;因为我们有6个scale，这样最终会有6个c维的向量，将这6个向量相加后求平均&lt;/li&gt;
+&lt;li&gt;在最终得到的c维向量上根据需要求Top1或者Top5的类别&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/OverFeat_004.JPG&#34; alt=&#34;&#34; /&gt;
+表2给出了作者测试的结果，可以看到使用这种多尺度，fine stride的方法进行测试，得到的准确率要比原始的AlexNet高将近7个百分点。&lt;/p&gt;
+
+&lt;h1 id=&#34;localization&#34;&gt;Localization&lt;/h1&gt;
+
+&lt;p&gt;对于localization任务，作者将在分类任务训练好的模型中的最后三个classifier layers替换为一个regression network去预测bounding boxes。在训练的过程中，将前五层的卷积层固定，单独训练回归层(利用预测框和gt的L2 loss来训练)。回归层的输出层是class specific的，也就是说，每个类对应一个输出层，如果有1000个类，则对应1000个输出。
+在预测时对每个scale会独立地进行两次前向，首先计算classifier的分数，然后把最后的classifier layers替换为regression layers，再计算一次。对于regression layers的输出，类似于下图：
+&lt;img src=&#34;https://file.byjiang.com/OverFeat_005.JPG&#34; alt=&#34;&#34; /&gt;
+我们需要对bbox进行一系列的合并，最终只剩下一个bbox，合并的规则如下：
+&lt;img src=&#34;https://file.byjiang.com/OverFeat_006.JPG&#34; alt=&#34;&#34; /&gt;
+大体上就是不断地将重叠面积大于一定比例同时较高的置信度属于同一个object的两个bbox进行合并。&lt;/p&gt;
+
+&lt;h1 id=&#34;detection&#34;&gt;Detection&lt;/h1&gt;
+
+&lt;p&gt;其实就是将classification和localization两个阶段结合到一块。就是对一幅图中的所有物体都执行localization，同时在训练的过程中加入了背景类。&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion：&lt;/h1&gt;
+
+&lt;p&gt;我认为这篇文章最大的贡献是将识别，定位和检测集成到了一个统一的架构之下，使用sliding window使train和inference的速度都得到了极大地提升，同时使用FCN网络而引入了multi-scale的策略，极大地提高了正确率，但是由于其需要为每一个类预测一个bounding box，它的速度还是比较慢的。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1312.6229.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1312.6229.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://vision.stanford.edu/teaching/cs231b_spring1415/slides/overfeat_eric.pdf&#34; target=&#34;_blank&#34;&gt;http://vision.stanford.edu/teaching/cs231b_spring1415/slides/overfeat_eric.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.image-net.org/challenges/LSVRC/2013/slides/overfeat_ilsvrc2013.pdf&#34; target=&#34;_blank&#34;&gt;http://www.image-net.org/challenges/LSVRC/2013/slides/overfeat_ilsvrc2013.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>RCNN</title>
+      <link>https://byjiang.com/2018/10/29/RCNN/</link>
+      <pubDate>Mon, 29 Oct 2018 10:10:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/10/29/RCNN/</guid>
+      <description>&lt;p&gt;RCNN可以看作是第一篇将深度学习的思想应用于目标检测的论文。相比于之前最好的目标检测算法mAP提高了30%。
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://file.byjiang.com/RCNN_001.JPG&#34; alt=&#34;pipeline&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;早期的目标检测的做法一般是将多个低层和高层的特征融合到一块。RCNN则是先通过一个selective search算法选择一系列可能存在目标的区域，然后将这些可能存在目标的区域先后通过一个DCNN，&lt;/p&gt;
+
+&lt;h1 id=&#34;module-design&#34;&gt;Module design&lt;/h1&gt;
+
+&lt;p&gt;在RCNN中，region proposal使用的是selective search方法。在特征提取阶段，将每个前一阶段提取出来的region通过一个DCNN(论文中使用的是一个在ImageNet上预训练的AlexNet)得到一个4096维的特征向量。在测试阶段，会使用ss提取大约2000个候选区域。对于每个区域，通过一个DCNN提取一个特征向量，然后将这个特征向量通过为每个类别单独训练的SVM进行打分。这个时候，对于一张图片会有2000个区域，每个区域都会有n个类别的分数。对于每个类别都会独立地进行一次NMS。&lt;/p&gt;
+
+&lt;h1 id=&#34;train&#34;&gt;Train&lt;/h1&gt;
+
+&lt;p&gt;整个训练的过程分为以下几步：首先在ImageNet上进行图像级别标注的训练，得到一个预训练模型。然后重新初始化最后一层网络的参数（此时最后一层为21分类），使用从VOC数据集中warped region proposals进行fine-tunning。对于所有与gt box的IOU大于0.5的region作为正样本（20个类别），其他的为负样本（背景类）。在每个batch中保持正负样本比例为32:96。最后，一旦前两阶段完成了，特征提取部分的网络权值就被固定下来了。使用提取的特征向量和对应的label可以对每一个类都训练一个SVM分类器。考虑到直接拟合整个数据集太大了，作者在训练SVM的时候使用了hard negative mining的方法。即如果分类器将某个背景区域以较大的置信度认为它是一个目标区域，则认为这是一个hard negative的样本，加入下一轮的训练中。&lt;/p&gt;
+
+&lt;h1 id=&#34;bounding-box-regression&#34;&gt;Bounding-box Regression&lt;/h1&gt;
+
+&lt;p&gt;在对结果的分析中，作者发现加入bounding-box regression可以将结果的mAP提升3-4个百分点。对于bounding-box regression过程，它的输入为$(P^i,G^i)$，其中$P^i=(P^i_x,P^i_y,P^i_w,P^i_h)$，分别为bbox的中心点坐标和框的宽和高。$G^i=(G^i_x,G^i_y,G^i_w,G^i_h)$为对应的gt。bbox regression通过输入pool5层的特征，学习$d_x(P),d_y(P),d_w(P),d_h(P)$这四个参数，通过这四个参数，可以建立起与predicted gt box$\hat{G}$的关系：
+$$\hat{G}_x=P_wd_x(P)+P_x   \\
+\hat{G}_y=P_hd_y(P)+P_y     \\
+\hat{G}_w=P_w\exp(d_w(P))     \\
+\hat{G}_h=P_h\exp(d_h(P))$$&lt;/p&gt;
+
+&lt;p&gt;这样，我们需要回归的参数就是：
+$$t_x=(G_x-P_x)/P_w \\\
+t_y=(G_y-P_y)/P_h \\
+t_w=\log(G_w/P_w) \\
+t_h=\log(G_h/P_h)$$&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;作为在目标检测领域最早应用深度学习的方法，极大地提高了目标检测的性能，但是显而易见的是它有很多的局限性，包括：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;训练过程不是端到端的，整个pipeline非常的复杂&lt;/li&gt;
+&lt;li&gt;region proposal的过程依赖于传统的ss算法，比较粗糙而且无法很好地利用GPU进行加速&lt;/li&gt;
+&lt;li&gt;整个训练的过程非常的费时和计算资源，而且inference的速度也非常的慢&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/1311.2524.pdf&#34; target=&#34;_blank&#34;&gt;https://arxiv.org/pdf/1311.2524.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>TinyFlow阅读(4)</title>
+      <link>https://byjiang.com/2018/08/01/TinyFlow_4/</link>
+      <pubDate>Wed, 01 Aug 2018 20:37:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/08/01/TinyFlow_4/</guid>
+      <description>&lt;p&gt;在这篇文章里，我们会看看当我们在python写下的符号是如何与后端进行连接的。
+&lt;/p&gt;
+
+&lt;p&gt;1.首先，当我们定义完网络后，我们会首先通过&lt;code&gt;sess = tf.Session(config=&#39;cpu&#39;)&lt;/code&gt;初始化一个sess，然后，python会调用&lt;code&gt;Session&lt;/code&gt;类的初始化函，其中&lt;code&gt;SessionHandle()&lt;/code&gt;初始化了一个void
+类型的指针。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;SessionHandle = _ctypes.c_void_p
+def __init__(self, config=&#39;cpu&#39;):
+    handle = SessionHandle()
+    check_call(_LIB.NNSessionCreate(_ctypes.byref(handle), c_str(config)))
+    self.handle = handle
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;之后，调用&lt;code&gt;NNSessionCreate&lt;/code&gt;函数在后端新建一个Session。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;//src\c_api.cc
+int NNSessionCreate(SessionHandle* handle, const char* option) {
+  API_BEGIN();
+  *handle = Session::Create(option);
+  API_END();
+}
+//src\session.cc
+Session* Session::Create(const std::string&amp;amp; option) {
+  return new TorchSession(option);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.有了Session后，首先要进行一些参数的初始化&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sess.run(init_step) \\初始化所有的网络层参数，如conv1.weight等
+sess.run(tf.initialize_all_variables()) \\初始化其他的一些参数，如adam优化器中的均值方差等参数
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.在python中，假设当我们写下&lt;code&gt;loss, _ = sess.run([cross_entropy, train_step], feed_dict={x: batch_xs, label:batch_ys})&lt;/code&gt;之后，会首先调用&lt;code&gt;_session.py&lt;/code&gt;中Session类的run函数，将传入的op聚合到一个group中，然后将feed_dict保存到一段连续的内存空间中，然后传指针的方式调用&lt;code&gt;NNSessionRun()&lt;/code&gt;函数&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def run(self, fetch, feed_dict=None):
+    if isinstance(fetch, list):
+        fetch = symbol.Group(fetch)
+    feed_dict = feed_dict if feed_dict else {}
+    feed_placeholders = []
+    feed_dptr = []
+    feed_dtype = []
+    feed_shape_csr_ptr = [0]
+    feed_shape_data = []
+    src_list = []
+
+    for k, v in feed_dict.items():
+        assert isinstance(k, symbol.Symbol)
+        assert isinstance(v, np.ndarray)
+        feed_placeholders.append(k.handle)
+        # only convert to float32 for now
+        source_array = np.ascontiguousarray(v, dtype=np.float32)
+        # leep src_list alive for the period
+        src_list.append(source_array)
+        feed_dptr.append(source_array.ctypes.data_as(_ctypes.c_void_p))
+        feed_dtype.append(0)
+        feed_shape_data.extend(source_array.shape)
+        feed_shape_csr_ptr.append(len(feed_shape_data))
+    out_size = nn_uint()
+    out_dptr = _ctypes.POINTER(_ctypes.POINTER(nn_float))()
+    out_dtype = _ctypes.POINTER(nn_uint)()
+    out_shape_ndim = _ctypes.POINTER(nn_uint)()
+    out_shape_data = _ctypes.POINTER(_ctypes.POINTER(nn_uint))()
+
+    check_call(_LIB.NNSessionRun(
+        self.handle, fetch.handle, nn_uint(len(src_list)),
+        c_array(_ctypes.c_void_p, feed_placeholders),
+        c_array(_ctypes.c_void_p, feed_dptr),
+        c_array(nn_uint, feed_dtype),
+        c_array(nn_uint, feed_shape_csr_ptr),
+        c_array(nn_uint, feed_shape_data),
+        _ctypes.byref(out_size),
+        _ctypes.byref(out_dptr),
+        _ctypes.byref(out_dtype),
+        _ctypes.byref(out_shape_ndim),
+        _ctypes.byref(out_shape_data)))
+    ret = []
+    for i in range(out_size.value):
+        shape = tuple(out_shape_data[i][:out_shape_ndim[i]])
+        ret.append(_get_numpy(out_dptr[i], out_dtype[i], shape))
+
+    return ret[0] if len(ret) == 1 else ret
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4.NNSessionRun()函数的定义在&lt;code&gt;src/c_api.cc&lt;/code&gt;中,首先，将feed_dict中的值保存到&lt;code&gt;std::unordered_map&amp;lt;std::string, TBlob&amp;gt; feed;&lt;/code&gt;中，然后，调用Session:Run()函数进行实际的运算，最后，将返回的结果放到&lt;code&gt;out_*&lt;/code&gt;系列的变量中返回到python中。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;int NNSessionRun(SessionHandle handle,
+                 SymbolHandle graph,
+                 nn_uint num_feed,
+                 const SymbolHandle* feed_placeholders,
+                 const float** feed_dptr,
+                 const nn_uint* feed_dtype,
+                 const nn_uint* feed_shape_csr_ptr,
+                 const nn_uint* feed_shape_data,
+                 nn_uint* num_out,
+                 const float*** out_dptr,
+                 const nn_uint** out_dtype,
+                 const nn_uint** out_shape_ndim,
+                 const nn_uint*** out_shape_data) {
+  API_BEGIN();
+  std::unordered_map&amp;lt;std::string, TBlob&amp;gt; feed;
+  for (nn_uint i = 0; i &amp;lt; num_feed; ++i) {
+    const std::string&amp;amp; key =
+        static_cast&amp;lt;nnvm::Symbol*&amp;gt;(feed_placeholders[i])-&amp;gt;outputs[0].node-&amp;gt;attrs.name;
+    TBlob tmp;
+    tmp.data = (void*)feed_dptr[i];  // NOLINT(*)
+    tmp.shape = TShape(feed_shape_data + feed_shape_csr_ptr[i],
+                       feed_shape_data + feed_shape_csr_ptr[i + 1]);
+    feed[key] = tmp;
+  }
+
+  const std::vector&amp;lt;TBlob&amp;gt;&amp;amp; out = static_cast&amp;lt;Session*&amp;gt;(handle)-&amp;gt;Run(
+      static_cast&amp;lt;nnvm::Symbol*&amp;gt;(graph), feed);
+  *num_out = static_cast&amp;lt;nn_uint&amp;gt;(out.size());
+  auto* ret = dmlc::ThreadLocalStore&amp;lt;TinyAPIThreadLocalEntry&amp;gt;::Get();
+  ret-&amp;gt;floatp.resize(out.size());
+  ret-&amp;gt;dtype.resize(out.size());
+  ret-&amp;gt;shape_ndim.resize(out.size());
+  ret-&amp;gt;shape_data.resize(out.size());
+
+  for (size_t i = 0; i &amp;lt; out.size(); ++i) {
+    ret-&amp;gt;floatp[i] = static_cast&amp;lt;const float*&amp;gt;(out[i].data);
+    ret-&amp;gt;dtype[i] = out[i].dtype;
+    ret-&amp;gt;shape_ndim[i] = out[i].shape.ndim();
+    ret-&amp;gt;shape_data[i] = out[i].shape.data();
+  }
+  *out_dptr = dmlc::BeginPtr(ret-&amp;gt;floatp);
+  *out_dtype = dmlc::BeginPtr(ret-&amp;gt;dtype);
+  *out_shape_ndim = dmlc::BeginPtr(ret-&amp;gt;shape_ndim);
+  *out_shape_data = dmlc::BeginPtr(ret-&amp;gt;shape_data);
+  API_END();
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5.&lt;code&gt;TorchSession:Run(nnvm::Symbol* new_sym, const std::unordered_map&amp;lt;std::string, TBlob&amp;gt;&amp;amp; inputs)&lt;/code&gt;输出为需要运算的symbol及相应的feed_dict，首先计算输入的symbol的hash值，如果该symbol已经被缓存在&lt;code&gt;cached_execs_&lt;/code&gt;中，同时如果该symbol的output size和上一次运算时该symbol的output size相同，同时如果每个output节点对应的node，index，version都是一样的，那么认为该symbol不是stale_exec的，则直接调用&lt;code&gt;return entry.exec-&amp;gt;Run(inputs);&lt;/code&gt;进行计算，然后返回。否则，擦除缓存的symbol，重新加入新的symbol到&lt;code&gt;cached_execs_&lt;/code&gt;中，然后进行计算。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;const std::vector&amp;lt;TBlob&amp;gt;&amp;amp; TorchSession::Run(
+        nnvm::Symbol* new_sym,
+        const std::unordered_map&amp;lt;std::string, TBlob&amp;gt;&amp;amp; inputs) {
+    // compute the hash value
+    uint64_t hash_value = new_sym-&amp;gt;outputs.size();
+    for (NodeEntry&amp;amp; e : new_sym-&amp;gt;outputs) {
+        uint64_t value = reinterpret_cast&amp;lt;uint64_t&amp;gt;(e.node.get());
+        hash_value ^= value + 0x9e3779b9 + (hash_value &amp;lt;&amp;lt; 6) + (hash_value &amp;gt;&amp;gt; 2);
+    }
+    if (cached_execs_.count(hash_value) != 0) {
+        auto&amp;amp; entry = cached_execs_.at(hash_value);
+        const nnvm::Symbol&amp;amp; old_sym = entry.cached_symbol;
+        bool stale_exec = (old_sym.outputs.size() != new_sym-&amp;gt;outputs.size());
+        if (!stale_exec) {
+            for (size_t i = 0; i &amp;lt; old_sym.outputs.size(); ++i) {
+                if (old_sym.outputs[i].node.get() != new_sym-&amp;gt;outputs[i].node.get() ||
+                    old_sym.outputs[i].index != new_sym-&amp;gt;outputs[i].index ||
+                    old_sym.outputs[i].version != new_sym-&amp;gt;outputs[i].version) {
+                    stale_exec = true; break;
+                }
+            }
+        }
+        if (!stale_exec) {
+            ++entry.use_count;
+            return entry.exec-&amp;gt;Run(inputs);
+        } else {
+            cached_execs_.erase(hash_value);
+        }
+    }
+    // dump technique, remove all previous executors
+    // better strategy, LRU?
+    cached_execs_.clear();
+    ExecEntry e;
+    e.cached_symbol = *new_sym;
+    e.exec = std::make_shared&amp;lt;TorchExecutor&amp;gt;();
+    e.exec-&amp;gt;Init(*new_sym, &amp;amp;states_, default_dev_mask_, enable_fusion_);
+    cached_execs_[hash_value] = e;
+    return e.exec-&amp;gt;Run(inputs);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6.具体的计算发生在&lt;code&gt;TorchExecutor::Run(const std::unordered_map&amp;lt;std::string, TBlob&amp;gt;&amp;amp; inputs)&lt;/code&gt;中，具有以下几个步骤：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Setup(inputs);&lt;/li&gt;
+&lt;li&gt;如果placeholder&lt;em&gt;tblobs&lt;/em&gt;[i].data != nullptr&lt;/li&gt;
+&lt;li&gt;将数据从&lt;code&gt;placeholder_tblobs_&lt;/code&gt;拷贝到&lt;code&gt;data_entry_&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;调用&lt;code&gt;op_execs_[i]();&lt;/code&gt;进行计算&lt;/li&gt;
+&lt;li&gt;将计算得到的结果从&lt;code&gt;data_entry_&lt;/code&gt;拷贝到&lt;code&gt;output_blobs_&lt;/code&gt;，然后返回&lt;code&gt;output_blobs_&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;7.上一步中的Setup首先通过&lt;code&gt;SetupShapeDType(inputs, &amp;amp;need_redo_infer);&lt;/code&gt;判断是否需要重新构建计算图，如果需要则调用&lt;code&gt;SetupOpExecs();&lt;/code&gt;构建计算图op_execs_。&lt;code&gt;SetupOpExecs()&lt;/code&gt;这个函数有点长，有两百多行，其主要的作用是根据输入构建lua语言的前向反向计算闭包，保存在&lt;code&gt;std::vector&amp;lt;FOpExec&amp;gt; op_execs_;&lt;/code&gt;中，主要代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// setup executor closure
+        const Op* backward_op = Op::Get(&amp;quot;_backward&amp;quot;);
+        op_execs_.resize(idx.num_nodes());
+        // setup the array and requirements.
+        for (uint32_t nid = 0; nid &amp;lt; idx.num_nodes(); ++nid) {
+            const auto&amp;amp; inode = idx[nid];
+            if (inode.source-&amp;gt;is_variable()) continue;
+            std::vector&amp;lt;LuaRef&amp;gt; in_array, out_array;
+            for (const auto&amp;amp; e : inode.inputs) {
+                in_array.push_back(data_entry_[idx.entry_id(e)]);
+            }
+            for (uint32_t index = 0; index &amp;lt; inode.source-&amp;gt;num_outputs(); ++index) {
+                uint32_t eid = idx.entry_id(nid, index);
+                out_array.push_back(data_entry_[eid]);
+            }
+
+#if TINYFLOW_USE_FUSION == 1
+            if (node_rtc_ &amp;amp;&amp;amp; node_rtc_-&amp;gt;count(nid)) {
+      // rtc compute
+      op_execs_[nid] = GenerateRTCClosure(node_rtc_-&amp;gt;at(nid), in_array, out_array);
+    } else if (lua_compute_code.count(inode.source-&amp;gt;op())) {
+#else
+            if (lua_compute_code.count(inode.source-&amp;gt;op())) {
+#endif
+                // compute function
+                std::string lua_str = &amp;quot;return &amp;quot; + lua_compute_code[inode.source-&amp;gt;op()];
+                LuaRef fcompute = lua-&amp;gt;Eval(lua_str);
+                op_execs_[nid] = fcompute(
+                        in_array, out_array, inode.source-&amp;gt;attrs.dict);
+            } else if (!op_exec_modules_[nid].is_nil()) {
+                // nn module forward
+                std::vector&amp;lt;LuaRef&amp;gt; weights;
+                for (size_t i = 1; i &amp;lt; in_array.size(); ++i) {
+                    weights.push_back(in_array[i]);
+                }
+                op_execs_[nid] = fcreate_nnforward_closure(
+                        op_exec_modules_[nid], in_array[0], out_array[0], weights);
+                CHECK_EQ(out_array.size(), 1) &amp;lt;&amp;lt; &amp;quot;only support tensor nn module&amp;quot;;
+            } else if (inode.source-&amp;gt;op() == backward_op) {
+                // nn module backward
+                CHECK_GE(inode.control_deps.size(), 1);
+                const NNBackwardParam&amp;amp; param =
+                        dmlc::get&amp;lt;NNBackwardParam&amp;gt;(inode.source-&amp;gt;attrs.parsed);
+                std::vector&amp;lt;LuaRef&amp;gt; weight, gradWeight;
+                LuaRef gradInput, gradOutput, input = lempty_tensor, output = lempty_tensor;
+                gradInput = out_array[0];
+                for (size_t i = 1; i &amp;lt; out_array.size(); ++i) {
+                    gradWeight.push_back(out_array[i]);
+                }
+                gradOutput = in_array[0];
+                // set the non-needed to be empty tensor.
+                size_t in_ptr = 1;
+                if (param.need_inputs) {
+                    input = in_array[in_ptr];
+                    for (size_t i = 1; i &amp;lt; param.forward_readonly_inputs; ++i) {
+                        weight.push_back(in_array[i + in_ptr]);
+                    }
+                    in_ptr += param.forward_readonly_inputs;
+                } else {
+                    weight.resize(param.forward_readonly_inputs, lempty_tensor);
+                }
+                CHECK_EQ(param.num_states, 0);
+                if (param.need_outputs) {
+                    output = in_array[in_ptr];
+                }
+                op_execs_[nid] = fcreate_nnbackward_closure(
+                        op_exec_modules_[inode.control_deps[0]],
+                        input, output, weight, gradInput, gradOutput, gradWeight);
+            } else {
+                LOG(FATAL) &amp;lt;&amp;lt; &amp;quot;Function FLuaCompute is not registered on &amp;quot;
+                           &amp;lt;&amp;lt; inode.source-&amp;gt;op()-&amp;gt;name;
+            }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;8.backward计算图的注册在&lt;code&gt;_base.py&lt;/code&gt;中，&lt;code&gt;sym = g.apply(&#39;Gradient&#39;).symbol&lt;/code&gt;，Gradient pass的注册在&lt;code&gt;/nnvm/src/pass/gradient.cc&lt;/code&gt;中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// register pass
+NNVM_REGISTER_PASS(Gradient)
+.describe(&amp;quot;Return a gradient graph of src.attrs[\&amp;quot;ys\&amp;quot;] wrt src.attrs[\&amp;quot;xs\&amp;quot;]&amp;quot;)
+.set_body(Gradient)
+.set_change_graph(true)
+.depend_graph_attr(&amp;quot;grad_ys&amp;quot;)
+.depend_graph_attr(&amp;quot;grad_xs&amp;quot;)
+.depend_graph_attr(&amp;quot;grad_ys_out_grad&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+    <item>
+      <title>TinyFlow阅读(3)</title>
+      <link>https://byjiang.com/2018/07/25/TimyFlow_3/</link>
+      <pubDate>Wed, 25 Jul 2018 21:56:00 +0800</pubDate>
+      
+      <guid>https://byjiang.com/2018/07/25/TimyFlow_3/</guid>
+      <description>&lt;p&gt;这篇文章介绍如何注册用来构建网络所需的符号。
+&lt;/p&gt;
+
+&lt;p&gt;首先，可以看到在src目录下有&lt;code&gt;op_nn.cc&lt;/code&gt;,&lt;code&gt;op_tensor.cc&lt;/code&gt;,&lt;code&gt;op_special.cc&lt;/code&gt;这三个前端定义op的文件，分别定义了构建网络相关的op（如&lt;code&gt;linear&lt;/code&gt;,&lt;code&gt;conv2d&lt;/code&gt;等），tensor相关的操作（如&lt;code&gt;ones_like&lt;/code&gt;,&lt;code&gt;__add_symbol__&lt;/code&gt;等）以及其他的一些操作（主要是&lt;code&gt;_nop&lt;/code&gt;,&lt;code&gt;assign&lt;/code&gt;和&lt;code&gt;_no_gradient&lt;/code&gt;这三个）。而在&lt;code&gt;src/torch&lt;/code&gt;目录下，有三个对应的后端定义文件，分别为&lt;code&gt;op_nn_torch.cc&lt;/code&gt;,&lt;code&gt;op_tenso_torchr.cc&lt;/code&gt;,&lt;code&gt;op_special_torch.cc&lt;/code&gt;，在tinyflow中使用torch作为op的后端实现。前端和后端通过nnvm这个框架进行连接。&lt;/p&gt;
+
+&lt;p&gt;为了理解前后端的op注册过程，我们首先需要看一下op这个类的定义，其声明代码位于&lt;code&gt;nnvm/include/nnvm/op.h&lt;/code&gt;中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;class Op {
+ public:
+  /*! \brief name of the operator */
+  std::string name;
+  /*!
+   * \brief detailed description of the operator
+   *  This can be used to generate docstring automatically for the operator.
+   */
+  std::string description;
+  /* \brief description of inputs and keyword arguments*/
+  std::vector&amp;lt;ParamFieldInfo&amp;gt; arguments;
+  /*!
+   * \brief number of inputs to the operator,
+   * -1 means it is variable length
+   * When get_num_inputs is presented,
+   * the number will be decided by get_num_inputs instead.
+   * \sa get_num_inputs
+   */
+  uint32_t num_inputs = 1;
+  /*!
+   * \brief number of outputs of the operator
+   *  When get_num_outputs is presented.
+   *  The number of outputs will be decided by
+   *  get_num_outputs function
+   * \sa get_num_outputs
+   */
+  uint32_t num_outputs = 1;
+  /*!
+   * \brief get number of outputs given information about the node.
+   * \param attrs The attribute of the node
+   * \return number of outputs.
+   */
+  std::function&amp;lt;uint32_t(const NodeAttrs&amp;amp; attrs)&amp;gt; get_num_outputs = nullptr;
+  /*!
+   * \brief get number of inputs given information about the node.
+   * \param attrs The attribute of the node
+   * \return number of inputs
+   */
+  std::function&amp;lt;uint32_t(const NodeAttrs&amp;amp; attrs)&amp;gt; get_num_inputs = nullptr;
+  /*!
+   * \brief Attribute parser to parse the NodeAttrs information.
+   *
+   * This can help to get quick access to a parsed attribute
+   * object
+   *
+   * \code
+   *  // Example usage of attr_parser.
+   *
+   *  // Suppose we want to register operator sum.
+   *  // The parameters about sum operator
+   *  struct SumParam {
+   *    int axis;
+   *  };
+   *  // The parser function
+   *  void SumAttrParser(NodeAttrs* attrs) {
+   *     // This will be invoked during node construction.
+   *     SumParam param;
+   *     // parse axis string to integer
+   *     param.axis = atoi(attrs-&amp;gt;dict[&amp;quot;axis&amp;quot;].c_str());
+   *     // set the parsed parameter
+   *     attrs-&amp;gt;parsed = std::move(param);
+   *  }
+   *  // The other function that can utilize the parsed result.
+   *  TShape SumInferShape(const NodeAttrs&amp;amp; attrs,
+   *                       const std::vector&amp;lt;TShape&amp;gt;&amp;amp; ishapes) {
+   *     // we can use the parsed version of param
+   *     // without repeatively parsing the parameter
+   *     const SumParam&amp;amp; param = nnvm::get&amp;lt;SumParam&amp;gt;(attrs.parsed);
+   *  }
+   * \endcode
+   */
+  std::function&amp;lt;void(NodeAttrs* attrs)&amp;gt; attr_parser = nullptr;
+  // function fields.
+  /*!
+   * \brief setter function during registration
+   *  Set the description of operator
+   * \param descr the description string.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; describe(const std::string&amp;amp; descr);  // NOLINT(*)
+  /*!
+   * \brief Add argument information to the function.
+   * \param name Name of the argument.
+   * \param type Type of the argument.
+   * \param description Description of the argument.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; add_argument(const std::string &amp;amp;name,
+                          const std::string &amp;amp;type,
+                          const std::string &amp;amp;description);
+  /*!
+   * \brief Append list if arguments to the end.
+   * \param args Additional list of arguments.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; add_arguments(const std::vector&amp;lt;ParamFieldInfo&amp;gt; &amp;amp;args);
+  /*!
+   * \brief Set the num_inputs
+   * \param n The number of inputs to be set.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; set_num_inputs(uint32_t n);  // NOLINT(*)
+  /*!
+   * \brief Set the get_num_outputs function.
+   * \param fn The function to be set.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; set_num_inputs(std::function&amp;lt;uint32_t (const NodeAttrs&amp;amp; attr)&amp;gt; fn);  // NOLINT(*)
+  /*!
+   * \brief Set the num_outputs
+   * \param n The number of outputs to be set.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; set_num_outputs(uint32_t n);  // NOLINT(*)
+  /*!
+   * \brief Set the get_num_outputs function.
+   * \param fn The function to be set.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; set_num_outputs(std::function&amp;lt;uint32_t (const NodeAttrs&amp;amp; attr)&amp;gt; fn);  // NOLINT(*)
+  /*!
+   * \brief Set the attr_parser function.
+   * \param fn The number of outputs to be set.
+   * \return reference to self.
+   */
+  inline Op&amp;amp; set_attr_parser(std::function&amp;lt;void (NodeAttrs* attrs)&amp;gt; fn);  // NOLINT(*)
+  /*!
+   * \brief Register additional attributes to operator.
+   * \param attr_name The name of the attribute.
+   * \param value The value to be set.
+   * \param plevel The priority level of this set,
+   *  an higher priority level attribute
+   *  will replace lower priority level attribute.
+   *  Must be bigger than 0.
+   *
+   *  Cannot set with same plevel twice in the code.
+   *
+   * \tparam ValueType The type of the value to be set.
+   */
+  template&amp;lt;typename ValueType&amp;gt;
+  inline Op&amp;amp; set_attr(const std::string&amp;amp; attr_name,  // NOLINT(*)
+                      const ValueType&amp;amp; value,
+                      int plevel = 10);
+  /*!
+   * \brief Add another alias to this operator.
+   *   The same Op can be queried with Op::Get(alias)
+   * \param alias The alias of the operator.
+   * \return reference to self.
+   */
+  Op&amp;amp; add_alias(const std::string&amp;amp; alias);  // NOLINT(*)
+  /*!
+   * \brief Include all the attributes from an registered op group.
+   * \param group_name The name of the group.
+   * \return reference to self.
+   *
+   * \sa NNVM_REGISTER_OP_GROUP
+   */
+  Op&amp;amp; include(const std::string&amp;amp; group_name);
+  /*!
+   * \brief Get an Op for a given operator name.
+   *  Will raise an error if the op has not been registered.
+   * \param op_name Name of the operator.
+   * \return Pointer to a Op, valid throughout program lifetime.
+   */
+  static const Op* Get(const std::string&amp;amp; op_name);
+  /*!
+   * \brief Get additional registered attribute about operators.
+   *  If nothing has been registered, an empty OpMap will be returned.
+   * \param attr_name The name of the attribute.
+   * \return An OpMap of specified attr_name.
+   * \tparam ValueType The type of the attribute.
+   */
+  template&amp;lt;typename ValueType&amp;gt;
+  static const OpMap&amp;lt;ValueType&amp;gt;&amp;amp; GetAttr(const std::string&amp;amp; attr_name);
+
+ private:
+  template&amp;lt;typename ValueType&amp;gt;
+  friend class OpMap;
+  friend class OpGroup;
+  friend class dmlc::Registry&amp;lt;Op&amp;gt;;
+  // Program internal unique index of operator.
+  // Used to help index the program.
+  uint32_t index_{0};
+  // internal constructor
+  Op();
+  // get const reference to certain attribute
+  static const any* GetAttrMap(const std::string&amp;amp; key);
+  // update the attribute OpMap
+  static void UpdateAttrMap(const std::string&amp;amp; key,
+                            std::function&amp;lt;void(any*)&amp;gt; updater);
+  // add a trigger based on tag matching on certain tag attribute
+  // This will apply trigger on all the op such that
+  // include the corresponding group.
+  // The trigger will also be applied to all future registrations
+  // that calls include
+  static void AddGroupTrigger(const std::string&amp;amp; group_name,
+                              std::function&amp;lt;void(Op*)&amp;gt; trigger);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里以神经网络中的max_pool层为例，在前端的&lt;code&gt;op_nn.cc&lt;/code&gt;中注册如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;NNVM_REGISTER_OP(max_pool)
+.describe(&amp;quot;Max pooling&amp;quot;)
+.set_num_inputs(1)
+.set_attr_parser(ParamParser&amp;lt;ConvPoolParam&amp;gt;)
+.include(&amp;quot;nn_module&amp;quot;)
+.set_attr&amp;lt;FInferShape&amp;gt;(&amp;quot;FInferShape&amp;quot;, ConvPoolShape);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;NNVM_REGISTER_OP&lt;/code&gt;是一个宏定义，即注册一个名为OpName的op，其中#的作用是把OpName转换为一个字符串&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#define NNVM_REGISTER_OP(OpName)                                     \
+  DMLC_STR_CONCAT(NNVM_REGISTER_VAR_DEF(OpName), __COUNTER__) =         \
+      ::dmlc::Registry&amp;lt;::nnvm::Op&amp;gt;::Get()-&amp;gt;__REGISTER_OR_GET__(#OpName)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结合上面的op类的定义，就可以很容易理解上面的代码完成了以下的工作：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;定义一个名为max_pool的op&lt;/li&gt;
+&lt;li&gt;添加这个op功能的描述为&amp;rdquo;Max pooling&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;这个op接受的输入为一个变量&lt;/li&gt;
+&lt;li&gt;对输入的参数（如max pool操作的kernel size，stride，padding等参数进行解析）&lt;/li&gt;
+&lt;li&gt;将op归到nn_module这个op group中&lt;/li&gt;
+&lt;li&gt;FInferShape，如何通过输入信息推断shape&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;然后，我们再看看在后端这个op是如何实现的，在&lt;code&gt;op_nn_torch.cc&lt;/code&gt;中有&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;NNVM_REGISTER_OP(max_pool)
+.set_attr&amp;lt;FLuaCreateNNModule&amp;gt;(
+  &amp;quot;FLuaCreateNNModule&amp;quot;, R&amp;quot;(
+  function(ishape, kwarg)
+    local ksize = nn_parse_tuple(kwarg.ksize)
+    local stride = nn_parse_tuple(kwarg.strides, {1,1,1,1})
+    local kH = ksize[2]
+    local kW = ksize[3]
+    local dH = stride[2]
+    local dW = stride[3]
+    local padH = 0
+    local padW = 0
+    assert(kwarg.data_format == &#39;NCHW&#39;)
+    if kwarg.padding == &#39;SAME&#39; then
+      padW = math.floor((kW - 1) / 2)
+      padH = math.floor((kH - 1) / 2)
+    end
+    return nn.SpatialMaxPooling(kW, kH, dW, dH, padW, padH)
+  end
+)&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，*R*的作用是指引号内的字符串不进行任何的转义操作。这里，引号内的字符串其实就是在使用torch实现max pool操作的lua代码，我们之前提到过，tinyflow把torch作为op的后端代理。&lt;/p&gt;
+
+&lt;p&gt;至此，在python层面，我们就可以通过以下的方式调用max_pool操作了&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from nnvm import symbol as _sym
+def max_pool(data,
+             strides=[1, 1, 1, 1],
+             padding=&#39;VALID&#39;,
+             data_format=&#39;NCHW&#39;, **kwargs):
+    return _sym.max_pool(data, strides=strides, padding=padding,
+                         data_format=data_format, **kwargs)
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

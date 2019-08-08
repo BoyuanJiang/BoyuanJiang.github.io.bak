@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/blog/batch_normalization/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/blog/batch_normalization/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/blog/batch_normalization/">
+  <meta property="og:title" content="关于Batch Normalization的一些阅读理解 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2017-05-17T23:00:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2017-05-17T23:00:00&#43;08:00">
+  
+
+  
+
+  <title>关于Batch Normalization的一些阅读理解 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">关于Batch Normalization的一些阅读理解</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-05-17 23:00:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      May 17, 2017
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e5%85%b3%e4%ba%8eBatch%20Normalization%e7%9a%84%e4%b8%80%e4%ba%9b%e9%98%85%e8%af%bb%e7%90%86%e8%a7%a3&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fbatch_normalization%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2fblog%2fbatch_normalization%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fbatch_normalization%2f&amp;title=%e5%85%b3%e4%ba%8eBatch%20Normalization%e7%9a%84%e4%b8%80%e4%ba%9b%e9%98%85%e8%af%bb%e7%90%86%e8%a7%a3"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2fblog%2fbatch_normalization%2f&amp;title=%e5%85%b3%e4%ba%8eBatch%20Normalization%e7%9a%84%e4%b8%80%e4%ba%9b%e9%98%85%e8%af%bb%e7%90%86%e8%a7%a3"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e5%85%b3%e4%ba%8eBatch%20Normalization%e7%9a%84%e4%b8%80%e4%ba%9b%e9%98%85%e8%af%bb%e7%90%86%e8%a7%a3&amp;body=https%3a%2f%2fbyjiang.com%2fblog%2fbatch_normalization%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <blockquote>
+<p>以下是论文<strong><a href="https://arxiv.org/abs/1502.03167" target="_blank">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a></strong>的阅读笔记
+</p>
+
+<h2 id="为什么要使用bn">为什么要使用BN</h2>
+
+<h3 id="层间分布改变的影响">层间分布改变的影响</h3>
+
+<p>在训练的过程中，因为前一层的参数改变，将会导致后一层的输入的分布不断地发生改变，这就需要降低学习速率同时要注意参数的初始化，也使具有饱和非线性（saturating nonlinearity）结构的模型非常难训练（所谓的饱和就是指函数的值域是个有限值，即当函数自变量趋向无穷时，函数值不趋向无穷）。深度神经网络之所以复杂是因为它每一层的输出都会受到之前层的影响，因此一个小小的参数改变都会对网络产生巨大的改变。作者将这种现象称为internal covariate shift，提出了对每个输入层进行规范化来解决。在文中，作者提到使用BN可以在训练的过程中使用较高的学习速率，可以比较随意的对参数进行初始化，同时BN也起到了一种正则化的作用，在某种程度上可以取代dropout的作用。
+考虑如下的一个两层网络：
+$$ l=F_2(F_1(u,\Theta_1),\Theta_2) $$</p>
+</blockquote>
+
+<p>让$x=F_1(u,\Theta_1)$,则上式可以写作$l=F_2(x,\Theta_2)$，利用SGD进行优化会有以下的步骤：</p>
+
+<p>$$\Theta_2\leftarrow\Theta2 - \frac{\alpha}{m}\sum_{i=1}^m{\frac{\partial{F_2(x,\Theta_2)}}{\partial{\Theta_2}}}$$</p>
+
+<p>如果我们能够将x的分布固定下来，那么在更新$\Theta_2$的时候就不需要不断地调整以补偿x分布改变带来的变化。
+考虑一个以sigmoid为激活函数的神经层$z=g(Wu+b)$，$g(x)=\frac{1}{1+exp(x)}$，随着|x|的增大，g(x)的导数将趋向0，这就意味着除了靠近0的这一部分，其他情况下模型的梯度将消失，这就导致了模型训练地很慢。同时，因为x受W，b还有之前的神经层影响，这些层的参数的改变很有可能导致很多维度的x都进入非线性的饱和区域从而导致收敛减慢。随着网络的加深，这种现象会越来越严重。在这之前，由于饱和导致梯度消失通常通过以下几个方法进行缓解：</p>
+
+<ol>
+<li>使用ReLU激活函数</li>
+<li>小心的对参数进行初始化</li>
+<li>用一个较小的学习速率进行学习
+直到本文作者提出了BN这种神奇好用的方法。</li>
+</ol>
+
+<h2 id="bn层的引入">BN层的引入</h2>
+
+<h3 id="直接引入白化操作的问题">直接引入白化操作的问题</h3>
+
+<p>既然BN有这么多的好处，那么BN具体是如何实现的呢？
+首先作者提出，想要训练的更好，就需要减缓 Internal Covariate Shift现象。所谓 Internal Covariate Shift，就是指随着网络参数的训练，网络激活值的分布发生改变。通过白化(whitened)操作(经过线性变换使其均值为0方差为1，同时去相关)，可以达到固定输入分布的效果。但是如果在优化的过程中和白化操作混在一起，那么在执行梯度下降的过程中会受到标准化的参数更新的影响，这样会减弱甚至抵消梯度下降的产生的影响。文中作者举了这么个例子：</p>
+
+<p>考虑某一层有一个输入u和一个可学习的b相加，通过减去均值进行标准化：$\hat{x}=x-E[X]$，其中x=u+b.如果在梯度下降的过程不考虑b和E[x]的关联，那么b按照$b\leftarrow{b}+\Delta{b},b\propto{-\partial{l}/\partial{\hat{x}}}$进行更新，更新后，$u+(b+\Delta{b})-E[u+(b+\Delta{b})]=u+b-E[u+b]$。也就是说，将参数b的更新和随后的标准化组合到一起时，会导致最终的输出其实没有发生改变，或者说网络的误差并没有改变。随着训练的进行，b会不断地增加而网络的损失保持不变。如果规范化不仅中心处理(即减去均值)，而且还对激活值进行缩放，问题会变得更严重。</p>
+
+<h3 id="减轻internal-covariate-shift的方法">减轻Internal Covariate Shift的方法</h3>
+
+<p>之所以会产生以上的问题，主要是梯度优化的过程中没有考虑到标准化操作的进行。为了解决这一问题，作者提出我们需要<strong>保证</strong>网络产生的激活总是有<strong>相同</strong>的分布。让我们再次假设$x$为某一层的输入，$\chi$为整个训练集。将标准化重新写作
+$$\hat{x}=Norm(x,\chi)$$
+这时标准化的参数不仅取决于当前的输入x，还和整个训练集$\chi$有关，当x来自其它层的输出时，那么上式就会和前面层的网络参数$\Theta$有关，反向传播时需要计算
+$$\frac{\partial{Norm(x,\chi)}}{\partial{x}}and\frac{\partial{Norm(x,\chi)}}{\partial{\chi}}$$
+如果忽略上边第二项就会出现之前说到的问题。但是直接在这一架构下进行白话操作很非常的费时，代价很大。主要是需要计算协方差矩阵，进行归一化，以及反向传播时也需要进行相关的计算。因此这就需要寻找一种新的方法，既可以达到类似的效果，又不需要在每个参数更新后分析整个训练集。</p>
+
+<h2 id="通过一个mini-batch的统计特征进行标准化">通过一个mini-batch的统计特征进行标准化</h2>
+
+<p>前面说了一大堆，作者终于提出了新的解决方案，这一部分也是整个paper的核心部分。既然对每一层的输入进行完整的白化那么费时费力且不讨好，作者于是就做了以下两点必要的简化。<strong>第一</strong>，独立地对每一个特征维度进行标准化(均值为0，方差为1)，即对于一个d维的输入$x=(x^{(1)},x^{(2)}&hellip;x^{(d)})$，对每个维度进行标准化
+$$\hat{x}^{(k)}=\frac{x^{(k)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}$$
+其中均值和方差都基于整个训练集得到。但是如果仅是简单的对每一层的输入进行标准化可能会对该层的表达造成能力改变。比如对一个sigmoid激活函数的输入标准化会将输入固定在线性区域，即下图中x轴靠近0的部分
+<img src="http://oq393r0ea.bkt.clouddn.com/batch_normalization_03.png" alt="sigmoid" />
+为了解决这一问题，作者引入了以下的变化
+$$y^{(k)}=\gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}$$
+其中$\gamma^{(k)}、\beta^{(k)}$是两个可以学习的参数，用来恢复经过标准化后的网络的表达能力。如果$\gamma^{(k)}=\sqrt{Var[x^{(k)}]}$，$\beta^{(k)}=E[x^{(k)}]$。其实就可以看作是上述标准化过程的逆过程。
+接着作者说当我们使用随机优化算法时，利用整个训练集的数据去估计均值和方差是不合实际的，因此提出了<strong>第二点</strong>假设，可以用一个mini-batch的数据作为对整体的一个近似估计。注意如果使用mini-batch，需要计算每个维度的方差而不是联合协方差。因为如果计算协方差，mini-batch的大小往往小于需要白化的激活值的数量，因此需要考虑正则化。关于这一点的解释，可以看我的另一篇文章,<em><a href="http://www.aiboy.pub/2017/05/14/Why_Not_Calc_Cov_In_BN/" target="_blank">BN层为什么不用协方差计算的理解</a></em></p>
+
+<h3 id="核心算法流程">核心算法流程</h3>
+
+<p>以下是算法核心部分，考虑一个大小为m的mini-batch$B$，因为是对每个维度单独进行标准化，考虑第k个维度$x^k$，省略k，则可以写作
+$$B={{x<em>1&hellip;m}}$$
+将BN层定义为：
+$$BN</em>{\gamma,\beta}:x<em>{1&hellip;m} \rightarrow y</em>{1&hellip;m}$$
+<img src="http://oq393r0ea.bkt.clouddn.com/batch_normalization_01.png" alt="算法一" />
+对于输入的mini-batch的一个维度，首先计算均值$\mu<em>B$和方差$\sigma</em>{B}^{2}$，然后进行标准化，其中 $\epsilon$ 为一个接近0的小数避免出现除0错误，$\gamma、\beta$为两个可以学习的参数，用来对结果进行放缩和平移。</p>
+
+<p>第一次读到这的时候，我对算法1 中第四步有些疑惑，既然BN的作用对输入层进行标准化，那么为什么在第三步已经完成标准化的情况下还要进行4操作，后来发现其实作者在前文已经说了。首先$\hat x$是标准化后的输出，但是如果仅以此为输出，其输出就被限定为了标准正态分布，这样很可能会限制原始网络能表达的信息，前文已用sigmoid函数进行了举例说明。因为$\gamma、\beta$这两个参数是可以学习的，所以的标准化后的$\hat x$的&rdquo;恢复&rdquo;程度将在训练的过程中由网络自主决定。</p>
+
+<p><img src="http://oq393r0ea.bkt.clouddn.com/batch_normalization_02.png" alt="算法二" /></p>
+
+<p>算法二主要从整体描述了如何训练一个包含多个BN层的神经网络。</p>
+
+<ul>
+<li>步骤1-5描述了如何利用算法1的方式，将一个普通的神经网络转换为含有BN层的神经网络</li>
+<li>步骤6-7是训练网络，优化参数的过程。除了原网络中的参数$\Theta$，这里还多了$\gamma、\beta$两组放缩的参数</li>
+<li>步骤8-12描述了如何将一批数据的统计信息(均值、方差)转换为训练集整体的统计信息的过程。因为完成训练后在预测阶段，我们使用的是模型存储的整体的统计信息</li>
+</ul>
+
+<p>以上这段话概括来说，就是训练的时候直接用每个batch的均值和方差信息，同时利用如下的滑动平均的公式记录均值和方差作为训练集整体的统计信息供模型在测试时使用。
+\begin{align}
+global_mean = global_mean * decay + batch_mean * (1 - decay)<br />
+global_var = global_var * decay + batch_var * (1 - decay)
+\end{align}
+其中，decay一般取比较接近1的小数，如0.999</p>
+
+<h2 id="正则化模型">正则化模型</h2>
+
+<p>除了可以更快地训练网络，BN层还有对模型起到正则化的作用。因为当训练一个BN网络的时候，对于一个给定的样本，它还可以&rdquo;看到&rdquo;一个batch中其他的情况，这样网络对于一个给定的样本输入每次就可以产生一个不确定的输出(因为标准化的过程和batch中其他的样本均有关联)，作者通过实验证明这对减少模型的过拟合具有作用。</p>
+
+<h2 id="如何在tensorflow中使用bn层">如何在TensorFlow中使用BN层</h2>
+
+<p>tf中已经封装好了BN层，如果想使用可以直接通过tf.contrib.layers.batch_norm进行调用，具体的参数列表见<a href="https://www.tensorflow.org/versions/master/api_docs/python/tf/contrib/layers/batch_norm" target="_blank">这里</a>，如果你想知道函数背后的具体实现方法，加深对BN层的理解，可以参考<a href="https://r2rt.com/implementing-batch-normalization-in-tensorflow.html" target="_blank">这篇文章</a>。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>BN的引入有以下几点好处：</p>
+
+<ol>
+<li>通过一个对输入层的batch normalization将每一层输入时的均值和方差固定，减缓了internal covariate shift现象，极大地加快了网络的训练</li>
+<li>有益于梯度在网络间的流动，减少参数对初始值的依赖</li>
+<li>可以使用一个更高的学习速率训练网络，避免发散的风险</li>
+<li>起到了正则化的作用，可以替代dropout层</li>
+<li>可以避免网络因为使用了饱和非线性激活函数陷入饱和模式</li>
+</ol>
+      </div>
+
+      
+
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

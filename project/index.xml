@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on 进击的加菲猫</title>
+    <link>https://byjiang.com/project/</link>
+    <description>Recent content in Projects on 进击的加菲猫</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2019</copyright>
+    <lastBuildDate>Mon, 04 Dec 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/project/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Age and Gender Estimation</title>
+      <link>https://byjiang.com/project/face/</link>
+      <pubDate>Mon, 04 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/project/face/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Image Inpainting by CNN</title>
+      <link>https://byjiang.com/project/inpainting/</link>
+      <pubDate>Mon, 04 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/project/inpainting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Smart Car</title>
+      <link>https://byjiang.com/project/smartcar/</link>
+      <pubDate>Mon, 04 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://byjiang.com/project/smartcar/</guid>
+      <description>&lt;video id=&#34;video&#34; controls=&#34;&#34; preload=&#34;none&#34; poster=&#34;/img/smartcar.jpg&#34;&gt;
+      &lt;source id=&#34;webm&#34; src=&#34;http://oq393r0ea.bkt.clouddn.com/smartcar.webm&#34; type=&#34;video/webm&#34;&gt;
+      &lt;p&gt;Your user agent does not support the HTML5 Video element.&lt;/p&gt;
+    &lt;/video&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

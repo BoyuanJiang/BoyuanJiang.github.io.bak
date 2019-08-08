@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2017/07/15/Backpropagation/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2017/07/15/Backpropagation/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2017/07/15/Backpropagation/">
+  <meta property="og:title" content="(译)从直观上理解反向传播 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2017-07-15T22:07:32&#43;08:00">
+  
+  <meta property="article:modified_time" content="2017-07-15T22:07:32&#43;08:00">
+  
+
+  
+
+  <title>(译)从直观上理解反向传播 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">(译)从直观上理解反向传播</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-07-15 22:07:32 &#43;0800 CST" itemprop="datePublished dateModified">
+      Jul 15, 2017
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%28%e8%af%91%29%e4%bb%8e%e7%9b%b4%e8%a7%82%e4%b8%8a%e7%90%86%e8%a7%a3%e5%8f%8d%e5%90%91%e4%bc%a0%e6%92%ad&amp;url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f15%2fBackpropagation%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f15%2fBackpropagation%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f15%2fBackpropagation%2f&amp;title=%28%e8%af%91%29%e4%bb%8e%e7%9b%b4%e8%a7%82%e4%b8%8a%e7%90%86%e8%a7%a3%e5%8f%8d%e5%90%91%e4%bc%a0%e6%92%ad"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f15%2fBackpropagation%2f&amp;title=%28%e8%af%91%29%e4%bb%8e%e7%9b%b4%e8%a7%82%e4%b8%8a%e7%90%86%e8%a7%a3%e5%8f%8d%e5%90%91%e4%bc%a0%e6%92%ad"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%28%e8%af%91%29%e4%bb%8e%e7%9b%b4%e8%a7%82%e4%b8%8a%e7%90%86%e8%a7%a3%e5%8f%8d%e5%90%91%e4%bc%a0%e6%92%ad&amp;body=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f15%2fBackpropagation%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>本文翻译自<a href="http://cs231n.github.io/optimization-2/" target="_blank">CS231n</a>，从直观上对机器学习中的反向传播机制进行了介绍。
+</p>
+
+<h2 id="介绍">介绍</h2>
+
+<p><strong>动机</strong> 这一节中，我们从直观的角度来理解反向传播算法。反向传播通过反复使用链式法则来计算表达式的梯度值。了解这一过程以及其细节对于理解，开发，设计，调试神经网络都有很大的用处。</p>
+
+<p><strong>问题陈述</strong> 需要学习的核心问题如下：给定一个函数$f(x)$，其中$x$是输入向量，我们希望计算$f$在$x$处的梯度($\nabla f(x)$)。</p>
+
+<p><strong>动机</strong> 回想一下，我们对这个问题感兴趣的主要原因是在神经网络的特定情况下，$f$将和损失函数$L$相关，输入$x$包含训练数据及神经网络的权重。比方说，损失为SVM损失函数，输入为训练数据($(x_i,y_i), i=1 \ldots N$)以及权重和偏置$W,b$。注意(大多数机器学习的情形)我们把训练数据看作是固定的，而权值是需要我们控制改变的。因此，即使我们可以很容易通过反向传播计算输入样本$x_i$的梯度，我们往往也只计算参数的梯度值($W,b$)，然后我们就可以用其对参数进行更新。但是，正如我们之后会看到的，计算$x_i$的梯度值有时候也是有用处的。比如说为了可视化和解释神经网络正在做什么。</p>
+
+<h2 id="简单的表述和解释梯度">简单的表述和解释梯度</h2>
+
+<p>这一节主要从数学上简单的介绍了什么是梯度，大概就和我们在高数课本上学到的解释差不多，这里就不翻译了。</p>
+
+<h2 id="使用链式法则的复合表达式">使用链式法则的复合表达式</h2>
+
+<p>现在让我们考虑引入多个复合函数的复杂表达式，比如$f(x,y,z) = (x + y) z$.这个函数直接进行求导也比较简单，但是我们会使用特殊的方法，其对于从直观上理解反向传播非常有帮助。观察发现，这个表达式可以拆分为以下两个表达式：$q=x+y$和$f=qz$。我们知道如何单独地计算这两个拆分的表达式的导数，而$f$就是$q$和$z$的乘积。所以，$\frac{\partial f}{\partial q} = z, \frac{\partial f}{\partial z} = q$,q是x与y相加，所以$\frac{\partial q}{\partial x} = 1, \frac{\partial q}{\partial y} = 1$。然而，我们并不需要中间变量q的梯度。我们关心的是$f$关于$x,y,z$的梯度。链式法则告诉我们通过相乘的方式将这些梯度表达式串起来。比如，$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial q} \frac{\partial q}{\partial x}$。实际上，这就是把两个包含各自表达式梯度值的数字相乘。看如下的例子：</p>
+
+<pre><code class="language-Python"># set some inputs
+x = -2; y = 5; z = -4
+
+# perform the forward pass
+q = x + y # q becomes 3
+f = q * z # f becomes -12
+
+# perform the backward pass (backpropagation) in reverse order:
+# first backprop through f = q * z
+dfdz = q # df/dz = q, so gradient on z becomes 3
+dfdq = z # df/dq = z, so gradient on q becomes -4
+# now backprop through q = x + y
+dfdx = 1.0 * dfdq # dq/dx = 1. And the multiplication here is the chain rule!
+dfdy = 1.0 * dfdq # dq/dy = 1
+</code></pre>
+
+<p>最后我们保留了梯度*[dfdx,dfdy,dfdz]*，从中可以看出*x,y,z*对*f*的重要程度。这是反向传播最简单的例子。</p>
+
+<p>以上的例子也可以通过如下的图1进行可视化的解释
+<img src="http://oq393r0ea.bkt.clouddn.com/20170715165338.png" alt="图1" />
+横线上方的值为前向传播时计算得到的结果，下方的值为反向传播计算得到的值。其中反向传播从右侧往左侧计算，依次将节点运算的梯度值和节点右侧的上一节点梯度值相乘作为该节点的梯度值。</p>
+
+<h2 id="从直观上理解反向传播">从直观上理解反向传播</h2>
+
+<p>反向传播是一种非常漂亮的局部处理方法。在线路图中的每个门接受一些输入，然后可以计算两件事：1.它的输出，2.它的输入相对于输出的局部梯度值。值得注意的是每个门都可以独立的完成这两件事，即不需要其他门的参与。然而，一旦前向传播完成，反向传播阶段，最后的门获得其输出值对整个线路最终输出的梯度。链式法则说的是前面的门需要利用这个梯度，与其局部梯度相乘获得每个门的梯度值。</p>
+
+<blockquote>
+<p>这种额外的相乘是因为链式法则可以将每个单一、看似无用的门转换为一个复杂的神经网络。</p>
+</blockquote>
+
+<p>让我们再直观的看看上述的例子是怎么工作的。将[-2,5]作为相加门的输入，计算得到3作为输出。因为门进行相加的操作，它相对于输入的局部梯度值均为+1。线路的剩余部分计算得到最终的输出值-12.反向传播阶段，链式法则通过线路递归地逆向运算。相加门(相乘门的一个输入)得知其输出的梯度为-4。如果我们希望线路的输出增大，那么线路中相加门的输出就应该减小，递归使用链式法则，相加门使用上级的梯度值(-4)和自身的梯度值(1)相乘，获得相加门输入相对输出的局部梯度值-4(-4*1).注意这有预期的效果：如果x,y减小，则相加门的输出减小，又由于其负梯度值，整个线路最终的输出将增大。</p>
+
+<p>因此，反向传播可以被认为是门之间彼此联系的方法（通过梯度信号），每个门是希望其输出增加还是减少（以及如何强烈），以便最终能达到使输出值增大的效果。</p>
+
+<h2 id="模块化-sigmoid的例子">模块化：Sigmoid的例子</h2>
+
+<p>上述介绍的例子中使用的门相对比较随意。任何可微的函数均可以作为一个门，我们也可以将多个门分组归类为一个门，也可以将一个函数分解为多个门。看另一个阐述了这个方法的例子:
+$$f(w,x) = \frac{1}{1+e^{-(w_0x_0 + w_1x_1 + w_2)}}$$
+上述表达式描述了一个具有2维(输入为$x$，权重为$w$)，使用sigmoid激活函数的神经元。这个函数可以看作由如下多个门构成的。整个线路图如下：
+<img src="http://oq393r0ea.bkt.clouddn.com/20170715201042.png" alt="图2" />
+输入为[x0,x1]和可学习的权值[w0,w1,w2]。神经元通过将输入进行点乘操作，然后通过sigmoid函数激活，将其值放缩到0到1之间。</p>
+
+<p>在上述的例子中，我们看到了一个通过w,x间点乘操作构成的长链。这一系列操作构成的函数被称为sigmoid函数$\sigma(x)$.可以证明它的微分结果和它本身有很大的关系。
+$$\sigma(x) = \frac{1}{1+e^{-x}} \<br />
+\rightarrow \hspace{0.3in} \frac{d\sigma(x)}{dx} = \frac{e^{-x}}{(1+e^{-x})^2} = \left( \frac{1 + e^{-x} - 1}{1 + e^{-x}} \right) \left( \frac{1}{1+e^{-x}} \right)
+= \left( 1 - \sigma(x) \right) \sigma(x)$$
+通过化简可以看到，它的微分相当简洁。比如将1作为输入，计算输出为0.73，它的梯度值就是(1 - 0.73) * 0.73 ~= 0.2,和上图通过链式法则计算得到的梯度值是一样的。正因为这种方式具有简洁，高效的计算表达式(同时也意味着更少的数值问题)。因此在实际应用时将这些操作聚合为一个门将非常的有用。以下是上述例子的代码表述：</p>
+
+<pre><code class="language-Python">w = [2,-3,-3] # assume some random weights and data
+x = [-1, -2]
+
+# forward pass
+dot = w[0]*x[0] + w[1]*x[1] + w[2]
+f = 1.0 / (1 + math.exp(-dot)) # sigmoid function
+
+# backward pass through the neuron (backpropagation)
+ddot = (1 - f) * f # gradient on dot variable, using the sigmoid gradient derivation
+dx = [w[0] * ddot, w[1] * ddot] # backprop into x
+dw = [x[0] * ddot, x[1] * ddot, 1.0 * ddot] # backprop into w
+# we're done! we have the gradients on the inputs to the circuit
+</code></pre>
+
+<p><strong>技巧：分步反向传播：</strong>正如上述代码，实际中将前向传播分步骤进行是非常有帮助的。我们创建了一个中间变量*dot*用来保存*w*和*x*之间点乘操作的结果，反向传播阶段我们依次计算(按相反的顺序)相关变量(<em>ddot</em>,<em>dw,dx</em>)的梯度值。</p>
+
+<p>这一节介绍了反向传播如何运行的细节，以及前向传播时将哪些部分是作为同一个门则取决于方便性。意识到那一部分表达式具有简单的局部梯度值是非常有帮助的，可以将它们合并到一起从而减少代码量以及提高效率。</p>
+
+<h2 id="反向传播实践-分阶段计算">反向传播实践：分阶段计算</h2>
+
+<p>让我们看另一个例子，假设我们有如下形式的函数：
+$$f(x,y) = \frac{x + \sigma(y)}{\sigma(x) + (x+y)^2}$$</p>
+
+<p>如果尝试进行计算x和y的微分表达式，将会得到一个异常复杂的结果。当然，这样做也毫无意义，因为我们不需要准确地将整个微分解析式写下来评估梯度。我们只需要知道怎么计算它。以下展示了我们如何结构化的进行前向传播计算这一表达式：</p>
+
+<pre><code class="language-Python">x = 3 # example values
+y = -4
+
+# forward pass
+sigy = 1.0 / (1 + math.exp(-y)) # sigmoid in numerator   #(1)
+num = x + sigy # numerator                               #(2)
+sigx = 1.0 / (1 + math.exp(-x)) # sigmoid in denominator #(3)
+xpy = x + y                                              #(4)
+xpysqr = xpy**2                                          #(5)
+den = sigx + xpysqr # denominator                        #(6)
+invden = 1.0 / den                                       #(7)
+f = num * invden # done!                                 #(8)
+</code></pre>
+
+<p>反向传播则只需要按照以上的顺序反序进行即可</p>
+
+<pre><code class="language-Python"># backprop f = num * invden
+dnum = invden # gradient on numerator                             #(8)
+dinvden = num                                                     #(8)
+# backprop invden = 1.0 / den 
+dden = (-1.0 / (den**2)) * dinvden                                #(7)
+# backprop den = sigx + xpysqr
+dsigx = (1) * dden                                                #(6)
+dxpysqr = (1) * dden                                              #(6)
+# backprop xpysqr = xpy**2
+dxpy = (2 * xpy) * dxpysqr                                        #(5)
+# backprop xpy = x + y
+dx = (1) * dxpy                                                   #(4)
+dy = (1) * dxpy                                                   #(4)
+# backprop sigx = 1.0 / (1 + math.exp(-x))
+dx += ((1 - sigx) * sigx) * dsigx # Notice += !! See notes below  #(3)
+# backprop num = x + sigy
+dx += (1) * dnum                                                  #(2)
+dsigy = (1) * dnum                                                #(2)
+# backprop sigy = 1.0 / (1 + math.exp(-y))
+dy += ((1 - sigy) * sigy) * dsigy                                 #(1)
+# done! phew
+</code></pre>
+
+<p>注意两点：
+<strong>对前向传播的中间变量进行缓存</strong> 前向传播过程中得到的某些中间变量对于反向传播梯度计算非常的有用。在实际应用中，结构化计算过程可以很方便的对中间变量进行缓存，以便提供给反向传播计算时使用。如果很难确定哪些变量可能是有用的，可以尝试重新计算它们(但是这样做比较费时)。</p>
+
+<p><strong>将相同变量的梯度相加</strong> 前向传播的表达式中多次涉及变量*x*和*y*，所以当反向传播时，当涉及到这些变量时，我们需要使用+=而不是=，以便将各自涉及每个的梯度加起来。这遵循微积分中的多变量链式法则，其规定如果变量分布于线路的不同部分，则返回的梯度是所有值的相加。</p>
+
+<h2 id="反向流动的模式">反向流动的模式</h2>
+
+<p>略。</p>
+
+<h2 id="矢量化操作的梯度">矢量化操作的梯度</h2>
+
+<p>以上章节的操作涉及到的均为单变量，但是所有的操作均很容易推广到矩阵和向量操作。只是在计算的过程中要注意对变量进行转置操作以符合矩阵间相乘的维度要求。</p>
+
+<p><strong>矩阵与矩阵相乘的梯度</strong> 最麻烦的操作可能就是矩阵与矩阵相乘：</p>
+
+<pre><code class="language-Python"># forward pass
+W = np.random.randn(5, 10)
+X = np.random.randn(10, 3)
+D = W.dot(X)
+
+# now suppose we had the gradient on D from above in the circuit
+dD = np.random.randn(*D.shape) # same shape as D
+dW = dD.dot(X.T) #.T gives the transpose of the matrix
+dX = W.T.dot(dD)
+</code></pre>
+
+<p><em>注意分析变量维度！</em></p>
+
+<p><strong>使用小的，明确的例子</strong> 有些人可能会发现很难为某些向量化表达式导出梯度更新。 我们的建议是明确地写出一个小的矢量化示例，在纸上推导出其微分，然后将模式推广到有效、矢量化的形式上。</p>
+
+<p>Erik Learned-Miller写了一个更加详细的文档，关于如何计算矩阵、向量的微分，你可以<a href="http://cs231n.stanford.edu/vecDerivs.pdf" target="_blank">参考这里</a>。</p>
+
+<h2 id="总结">总结</h2>
+
+<ul>
+<li>我们直观的介绍了梯度的意义，它们如何在线路图中反向流动，它们如何与线路图中的其他部分联系以确认是增大还是减小自身值，从而使最终的输出增大。</li>
+<li>我们讨论了在实际应用反向传播时分布计算的重要性。你总是应该将函数分成一个个容易计算局部梯度的部分，然后用链式法则将它们串起来。最重要的是，你不需要在纸上将这些表达式以及其导数形式用符号的方式写出来，因为对于这些输入的梯度，你并不需要一个明确的数学解析式。因此，将你的表达式分解后分步计算，可以独立的计算每一部分的微分（每一部分可能是矩阵向量相乘，或者max操作，或者相加操作等），然后再分步地反向传播。</li>
+</ul>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+<li><a href="http://arxiv.org/abs/1502.05767" target="_blank">Automatic differentiation in machine learning: a survey</a></li>
+</ul>
+      </div>
+
+      
+
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

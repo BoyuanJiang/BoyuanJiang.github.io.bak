@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/08/01/TinyFlow_4/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/08/01/TinyFlow_4/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/08/01/TinyFlow_4/">
+  <meta property="og:title" content="TinyFlow阅读(4) | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-08-01T20:37:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-08-01T20:37:00&#43;08:00">
+  
+
+  
+
+  <title>TinyFlow阅读(4) | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">TinyFlow阅读(4)</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-08-01 20:37:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Aug 1, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    4 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=TinyFlow%e9%98%85%e8%af%bb%284%29&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f08%2f01%2fTinyFlow_4%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f08%2f01%2fTinyFlow_4%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f08%2f01%2fTinyFlow_4%2f&amp;title=TinyFlow%e9%98%85%e8%af%bb%284%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f08%2f01%2fTinyFlow_4%2f&amp;title=TinyFlow%e9%98%85%e8%af%bb%284%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=TinyFlow%e9%98%85%e8%af%bb%284%29&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f08%2f01%2fTinyFlow_4%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>在这篇文章里，我们会看看当我们在python写下的符号是如何与后端进行连接的。
+</p>
+
+<p>1.首先，当我们定义完网络后，我们会首先通过<code>sess = tf.Session(config='cpu')</code>初始化一个sess，然后，python会调用<code>Session</code>类的初始化函，其中<code>SessionHandle()</code>初始化了一个void
+类型的指针。</p>
+
+<pre><code class="language-python">SessionHandle = _ctypes.c_void_p
+def __init__(self, config='cpu'):
+    handle = SessionHandle()
+    check_call(_LIB.NNSessionCreate(_ctypes.byref(handle), c_str(config)))
+    self.handle = handle
+</code></pre>
+
+<p>之后，调用<code>NNSessionCreate</code>函数在后端新建一个Session。</p>
+
+<pre><code class="language-cpp">//src\c_api.cc
+int NNSessionCreate(SessionHandle* handle, const char* option) {
+  API_BEGIN();
+  *handle = Session::Create(option);
+  API_END();
+}
+//src\session.cc
+Session* Session::Create(const std::string&amp; option) {
+  return new TorchSession(option);
+}
+</code></pre>
+
+<p>2.有了Session后，首先要进行一些参数的初始化</p>
+
+<pre><code class="language-python">sess.run(init_step) \\初始化所有的网络层参数，如conv1.weight等
+sess.run(tf.initialize_all_variables()) \\初始化其他的一些参数，如adam优化器中的均值方差等参数
+</code></pre>
+
+<p>3.在python中，假设当我们写下<code>loss, _ = sess.run([cross_entropy, train_step], feed_dict={x: batch_xs, label:batch_ys})</code>之后，会首先调用<code>_session.py</code>中Session类的run函数，将传入的op聚合到一个group中，然后将feed_dict保存到一段连续的内存空间中，然后传指针的方式调用<code>NNSessionRun()</code>函数</p>
+
+<pre><code class="language-python">def run(self, fetch, feed_dict=None):
+    if isinstance(fetch, list):
+        fetch = symbol.Group(fetch)
+    feed_dict = feed_dict if feed_dict else {}
+    feed_placeholders = []
+    feed_dptr = []
+    feed_dtype = []
+    feed_shape_csr_ptr = [0]
+    feed_shape_data = []
+    src_list = []
+
+    for k, v in feed_dict.items():
+        assert isinstance(k, symbol.Symbol)
+        assert isinstance(v, np.ndarray)
+        feed_placeholders.append(k.handle)
+        # only convert to float32 for now
+        source_array = np.ascontiguousarray(v, dtype=np.float32)
+        # leep src_list alive for the period
+        src_list.append(source_array)
+        feed_dptr.append(source_array.ctypes.data_as(_ctypes.c_void_p))
+        feed_dtype.append(0)
+        feed_shape_data.extend(source_array.shape)
+        feed_shape_csr_ptr.append(len(feed_shape_data))
+    out_size = nn_uint()
+    out_dptr = _ctypes.POINTER(_ctypes.POINTER(nn_float))()
+    out_dtype = _ctypes.POINTER(nn_uint)()
+    out_shape_ndim = _ctypes.POINTER(nn_uint)()
+    out_shape_data = _ctypes.POINTER(_ctypes.POINTER(nn_uint))()
+
+    check_call(_LIB.NNSessionRun(
+        self.handle, fetch.handle, nn_uint(len(src_list)),
+        c_array(_ctypes.c_void_p, feed_placeholders),
+        c_array(_ctypes.c_void_p, feed_dptr),
+        c_array(nn_uint, feed_dtype),
+        c_array(nn_uint, feed_shape_csr_ptr),
+        c_array(nn_uint, feed_shape_data),
+        _ctypes.byref(out_size),
+        _ctypes.byref(out_dptr),
+        _ctypes.byref(out_dtype),
+        _ctypes.byref(out_shape_ndim),
+        _ctypes.byref(out_shape_data)))
+    ret = []
+    for i in range(out_size.value):
+        shape = tuple(out_shape_data[i][:out_shape_ndim[i]])
+        ret.append(_get_numpy(out_dptr[i], out_dtype[i], shape))
+
+    return ret[0] if len(ret) == 1 else ret
+</code></pre>
+
+<p>4.NNSessionRun()函数的定义在<code>src/c_api.cc</code>中,首先，将feed_dict中的值保存到<code>std::unordered_map&lt;std::string, TBlob&gt; feed;</code>中，然后，调用Session:Run()函数进行实际的运算，最后，将返回的结果放到<code>out_*</code>系列的变量中返回到python中。</p>
+
+<pre><code class="language-cpp">int NNSessionRun(SessionHandle handle,
+                 SymbolHandle graph,
+                 nn_uint num_feed,
+                 const SymbolHandle* feed_placeholders,
+                 const float** feed_dptr,
+                 const nn_uint* feed_dtype,
+                 const nn_uint* feed_shape_csr_ptr,
+                 const nn_uint* feed_shape_data,
+                 nn_uint* num_out,
+                 const float*** out_dptr,
+                 const nn_uint** out_dtype,
+                 const nn_uint** out_shape_ndim,
+                 const nn_uint*** out_shape_data) {
+  API_BEGIN();
+  std::unordered_map&lt;std::string, TBlob&gt; feed;
+  for (nn_uint i = 0; i &lt; num_feed; ++i) {
+    const std::string&amp; key =
+        static_cast&lt;nnvm::Symbol*&gt;(feed_placeholders[i])-&gt;outputs[0].node-&gt;attrs.name;
+    TBlob tmp;
+    tmp.data = (void*)feed_dptr[i];  // NOLINT(*)
+    tmp.shape = TShape(feed_shape_data + feed_shape_csr_ptr[i],
+                       feed_shape_data + feed_shape_csr_ptr[i + 1]);
+    feed[key] = tmp;
+  }
+
+  const std::vector&lt;TBlob&gt;&amp; out = static_cast&lt;Session*&gt;(handle)-&gt;Run(
+      static_cast&lt;nnvm::Symbol*&gt;(graph), feed);
+  *num_out = static_cast&lt;nn_uint&gt;(out.size());
+  auto* ret = dmlc::ThreadLocalStore&lt;TinyAPIThreadLocalEntry&gt;::Get();
+  ret-&gt;floatp.resize(out.size());
+  ret-&gt;dtype.resize(out.size());
+  ret-&gt;shape_ndim.resize(out.size());
+  ret-&gt;shape_data.resize(out.size());
+
+  for (size_t i = 0; i &lt; out.size(); ++i) {
+    ret-&gt;floatp[i] = static_cast&lt;const float*&gt;(out[i].data);
+    ret-&gt;dtype[i] = out[i].dtype;
+    ret-&gt;shape_ndim[i] = out[i].shape.ndim();
+    ret-&gt;shape_data[i] = out[i].shape.data();
+  }
+  *out_dptr = dmlc::BeginPtr(ret-&gt;floatp);
+  *out_dtype = dmlc::BeginPtr(ret-&gt;dtype);
+  *out_shape_ndim = dmlc::BeginPtr(ret-&gt;shape_ndim);
+  *out_shape_data = dmlc::BeginPtr(ret-&gt;shape_data);
+  API_END();
+  return 0;
+}
+</code></pre>
+
+<p>5.<code>TorchSession:Run(nnvm::Symbol* new_sym, const std::unordered_map&lt;std::string, TBlob&gt;&amp; inputs)</code>输出为需要运算的symbol及相应的feed_dict，首先计算输入的symbol的hash值，如果该symbol已经被缓存在<code>cached_execs_</code>中，同时如果该symbol的output size和上一次运算时该symbol的output size相同，同时如果每个output节点对应的node，index，version都是一样的，那么认为该symbol不是stale_exec的，则直接调用<code>return entry.exec-&gt;Run(inputs);</code>进行计算，然后返回。否则，擦除缓存的symbol，重新加入新的symbol到<code>cached_execs_</code>中，然后进行计算。</p>
+
+<pre><code class="language-cpp">const std::vector&lt;TBlob&gt;&amp; TorchSession::Run(
+        nnvm::Symbol* new_sym,
+        const std::unordered_map&lt;std::string, TBlob&gt;&amp; inputs) {
+    // compute the hash value
+    uint64_t hash_value = new_sym-&gt;outputs.size();
+    for (NodeEntry&amp; e : new_sym-&gt;outputs) {
+        uint64_t value = reinterpret_cast&lt;uint64_t&gt;(e.node.get());
+        hash_value ^= value + 0x9e3779b9 + (hash_value &lt;&lt; 6) + (hash_value &gt;&gt; 2);
+    }
+    if (cached_execs_.count(hash_value) != 0) {
+        auto&amp; entry = cached_execs_.at(hash_value);
+        const nnvm::Symbol&amp; old_sym = entry.cached_symbol;
+        bool stale_exec = (old_sym.outputs.size() != new_sym-&gt;outputs.size());
+        if (!stale_exec) {
+            for (size_t i = 0; i &lt; old_sym.outputs.size(); ++i) {
+                if (old_sym.outputs[i].node.get() != new_sym-&gt;outputs[i].node.get() ||
+                    old_sym.outputs[i].index != new_sym-&gt;outputs[i].index ||
+                    old_sym.outputs[i].version != new_sym-&gt;outputs[i].version) {
+                    stale_exec = true; break;
+                }
+            }
+        }
+        if (!stale_exec) {
+            ++entry.use_count;
+            return entry.exec-&gt;Run(inputs);
+        } else {
+            cached_execs_.erase(hash_value);
+        }
+    }
+    // dump technique, remove all previous executors
+    // better strategy, LRU?
+    cached_execs_.clear();
+    ExecEntry e;
+    e.cached_symbol = *new_sym;
+    e.exec = std::make_shared&lt;TorchExecutor&gt;();
+    e.exec-&gt;Init(*new_sym, &amp;states_, default_dev_mask_, enable_fusion_);
+    cached_execs_[hash_value] = e;
+    return e.exec-&gt;Run(inputs);
+}
+</code></pre>
+
+<p>6.具体的计算发生在<code>TorchExecutor::Run(const std::unordered_map&lt;std::string, TBlob&gt;&amp; inputs)</code>中，具有以下几个步骤：</p>
+
+<ul>
+<li>Setup(inputs);</li>
+<li>如果placeholder<em>tblobs</em>[i].data != nullptr</li>
+<li>将数据从<code>placeholder_tblobs_</code>拷贝到<code>data_entry_</code></li>
+<li>调用<code>op_execs_[i]();</code>进行计算</li>
+<li>将计算得到的结果从<code>data_entry_</code>拷贝到<code>output_blobs_</code>，然后返回<code>output_blobs_</code></li>
+</ul>
+
+<p>7.上一步中的Setup首先通过<code>SetupShapeDType(inputs, &amp;need_redo_infer);</code>判断是否需要重新构建计算图，如果需要则调用<code>SetupOpExecs();</code>构建计算图op_execs_。<code>SetupOpExecs()</code>这个函数有点长，有两百多行，其主要的作用是根据输入构建lua语言的前向反向计算闭包，保存在<code>std::vector&lt;FOpExec&gt; op_execs_;</code>中，主要代码如下:</p>
+
+<pre><code class="language-cpp">// setup executor closure
+        const Op* backward_op = Op::Get(&quot;_backward&quot;);
+        op_execs_.resize(idx.num_nodes());
+        // setup the array and requirements.
+        for (uint32_t nid = 0; nid &lt; idx.num_nodes(); ++nid) {
+            const auto&amp; inode = idx[nid];
+            if (inode.source-&gt;is_variable()) continue;
+            std::vector&lt;LuaRef&gt; in_array, out_array;
+            for (const auto&amp; e : inode.inputs) {
+                in_array.push_back(data_entry_[idx.entry_id(e)]);
+            }
+            for (uint32_t index = 0; index &lt; inode.source-&gt;num_outputs(); ++index) {
+                uint32_t eid = idx.entry_id(nid, index);
+                out_array.push_back(data_entry_[eid]);
+            }
+
+#if TINYFLOW_USE_FUSION == 1
+            if (node_rtc_ &amp;&amp; node_rtc_-&gt;count(nid)) {
+      // rtc compute
+      op_execs_[nid] = GenerateRTCClosure(node_rtc_-&gt;at(nid), in_array, out_array);
+    } else if (lua_compute_code.count(inode.source-&gt;op())) {
+#else
+            if (lua_compute_code.count(inode.source-&gt;op())) {
+#endif
+                // compute function
+                std::string lua_str = &quot;return &quot; + lua_compute_code[inode.source-&gt;op()];
+                LuaRef fcompute = lua-&gt;Eval(lua_str);
+                op_execs_[nid] = fcompute(
+                        in_array, out_array, inode.source-&gt;attrs.dict);
+            } else if (!op_exec_modules_[nid].is_nil()) {
+                // nn module forward
+                std::vector&lt;LuaRef&gt; weights;
+                for (size_t i = 1; i &lt; in_array.size(); ++i) {
+                    weights.push_back(in_array[i]);
+                }
+                op_execs_[nid] = fcreate_nnforward_closure(
+                        op_exec_modules_[nid], in_array[0], out_array[0], weights);
+                CHECK_EQ(out_array.size(), 1) &lt;&lt; &quot;only support tensor nn module&quot;;
+            } else if (inode.source-&gt;op() == backward_op) {
+                // nn module backward
+                CHECK_GE(inode.control_deps.size(), 1);
+                const NNBackwardParam&amp; param =
+                        dmlc::get&lt;NNBackwardParam&gt;(inode.source-&gt;attrs.parsed);
+                std::vector&lt;LuaRef&gt; weight, gradWeight;
+                LuaRef gradInput, gradOutput, input = lempty_tensor, output = lempty_tensor;
+                gradInput = out_array[0];
+                for (size_t i = 1; i &lt; out_array.size(); ++i) {
+                    gradWeight.push_back(out_array[i]);
+                }
+                gradOutput = in_array[0];
+                // set the non-needed to be empty tensor.
+                size_t in_ptr = 1;
+                if (param.need_inputs) {
+                    input = in_array[in_ptr];
+                    for (size_t i = 1; i &lt; param.forward_readonly_inputs; ++i) {
+                        weight.push_back(in_array[i + in_ptr]);
+                    }
+                    in_ptr += param.forward_readonly_inputs;
+                } else {
+                    weight.resize(param.forward_readonly_inputs, lempty_tensor);
+                }
+                CHECK_EQ(param.num_states, 0);
+                if (param.need_outputs) {
+                    output = in_array[in_ptr];
+                }
+                op_execs_[nid] = fcreate_nnbackward_closure(
+                        op_exec_modules_[inode.control_deps[0]],
+                        input, output, weight, gradInput, gradOutput, gradWeight);
+            } else {
+                LOG(FATAL) &lt;&lt; &quot;Function FLuaCompute is not registered on &quot;
+                           &lt;&lt; inode.source-&gt;op()-&gt;name;
+            }
+    }
+</code></pre>
+
+<p>8.backward计算图的注册在<code>_base.py</code>中，<code>sym = g.apply('Gradient').symbol</code>，Gradient pass的注册在<code>/nnvm/src/pass/gradient.cc</code>中：</p>
+
+<pre><code class="language-cpp">// register pass
+NNVM_REGISTER_PASS(Gradient)
+.describe(&quot;Return a gradient graph of src.attrs[\&quot;ys\&quot;] wrt src.attrs[\&quot;xs\&quot;]&quot;)
+.set_body(Gradient)
+.set_change_graph(true)
+.depend_graph_attr(&quot;grad_ys&quot;)
+.depend_graph_attr(&quot;grad_xs&quot;)
+.depend_graph_attr(&quot;grad_ys_out_grad&quot;);
+</code></pre>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e6%ba%90%e7%a0%81%e5%ad%a6%e4%b9%a0">源码学习</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+<div class="article-container article-widget">
+  <div class="hr-light"></div>
+  <h3>Related</h3>
+  <ul>
+    
+    <li><a href="/2018/07/25/TimyFlow_3/">TinyFlow阅读(3)</a></li>
+    
+    <li><a href="/2018/07/20/TinyFlow_2/">TinyFlow阅读(2)</a></li>
+    
+    <li><a href="/2018/07/11/TinyFlow_1/">TinyFlow阅读(1)</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

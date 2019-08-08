@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/11/14/YOLO_v2/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/11/14/YOLO_v2/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/11/14/YOLO_v2/">
+  <meta property="og:title" content="YOLO v2 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-11-14T15:50:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-11-14T15:50:00&#43;08:00">
+  
+
+  
+
+  <title>YOLO v2 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">YOLO v2</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-11-14 15:50:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Nov 14, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=YOLO%20v2&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f14%2fYOLO_v2%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f14%2fYOLO_v2%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f14%2fYOLO_v2%2f&amp;title=YOLO%20v2"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f14%2fYOLO_v2%2f&amp;title=YOLO%20v2"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=YOLO%20v2&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f14%2fYOLO_v2%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>这篇文章主要想记录一下YOLO算法的工作流程，文章主要基于YOLO v2来写的。
+</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>不同于两阶段的检测算法(RCNN系列)，YOLO是一种一阶段的检测算法。它将检测问题视为一个回归问题：使用一个网络直接预测bounding box的位置和类别概率。作为一种一阶段的检测网络，它的速度也非常的快，达到了45fps。但是相比于faster rcnn，YOLO v1由于直接预测bounding box的位置，所以它在物体位置的定位上有更大的误差，因此在v2中作者对这一问题提出了改进的方法。</p>
+
+<h1 id="method">Method</h1>
+
+<h2 id="grid-cell">Grid cell</h2>
+
+<p>首先，不同于RCNN系列使用selective search或者region proposal networks在原图上生成一系列可能包含物体的regions然后再做检测的方法，YOLO的做法是先将原图分成S x S个grid cell。然后对每grid cell预测$B$个bounding boxes。需要注意的是，在YOLO v1中，每个grid cell只会预测一个类，因此预测的输出为一个SxSx(B*5+C)维的向量，其中5是因为预测4个坐标向量+1个是否是object的概率。具体来说，YOLO v1的设置为S=7,B=2，这样在VOC的数据集上，YOLO的输出就是7x7x30。而在v2中，针对小目标检测比较差的情况，借鉴了rcnn的做法加入了anchor boxes。具体来说，就是把v1中最后的全连接层移除，用一个1x1的卷积层取而代之。卷积层的输出channels就是我们希望预测的类别数。同时不同于v1每个cell预测一个类别，v2中对每个bounding box预测一个类别。这样最终的输出就变成了SxSxB(5+c)，其中S=13,B=5,C为dataset的类别数。通过预测更多的bounding box和引入anchor的思想，将recall提升了7%。</p>
+
+<p>接着让我们详细的来看一下需要预测的4个坐标还有object的概率是怎么定义的。对于4个位置的坐标，$x,y$为box的中心相对于对应的grid cell左上角的偏移，$w,h$是bounding box的相对于先验anchor宽高的偏移。对于是否为object的概率，定义为$Pr(Object)*IOU_{pred}^{truth}$来定义。因此，预测值和真实值就有以下的映射关系：
+<img src="https://file.byjiang.com/yolo_001.jpg" alt="" /></p>
+
+<p>其中$t_x,t_y,t_w,t_h,t_o$就是我们希望网络学习的5个关于bounding box的值，当该bounding box内含有物体时，则还应学习物体的类别概率。</p>
+
+<p>此外，不同于faster rcnn中anchor boxes的长宽都是通过手工设置，比如1:1,2:1,1:2，yolo v2的anchor box的长宽是通过kmeans进行聚类生成的。比如在v2中，每个cell有5个bounding boxes，就把dataset中所有的gt boxes的长宽进行聚类，生成5个聚类中心，用这5个中心的长宽作为我们预设的anchor boxes的长宽。
+<img src="https://file.byjiang.com/yolo_002.jpg" alt="" /></p>
+
+<h2 id="fine-grained-features">Fine-grained features</h2>
+
+<p>为了提高小物体的检出率，借鉴特征融合的思想，将前面低层的特征和最后的高层特征进行融合。以v2这篇论文提出的darknet-19为例，原本是直接在最后的13x13的特征图上预测，但是考虑到在这个分辨率下可能会丢失部分小目标，因此将前面的26x26的特征图通过一个passthrough layer与13x13的特征图融合。考虑到这两层的特征分辨率不同，没法直接进行融合，因此yolo的做法是先将低层的26x26x512的特征拆分成13x13x2048，然后再将其和高层的13x13x1024特征图直接在channel维度进行拼接融合。一个简单的示意图如下，假设输入的特征图为4x4x1,stride=2，那么变换后的特征图就是2x2x4。
+<img src="https://file.byjiang.com/yolo_003.jpg" alt="" /></p>
+
+<h2 id="others">Others</h2>
+
+<p>为了提高mAP，文中还介绍了一些其他的tricks，比如在层与层之间加入batch norm进行正则化，加入多尺度训练，在较高的分辨率下进行预测等，作者画了张表格来说明这些改进所带来的提升，具体可以参阅原文：
+<img src="https://file.byjiang.com/yolo_004.jpg" alt="" /></p>
+
+<h1 id="how-to-implement">How to implement?</h1>
+
+<p>以下会以伪代码的形式介绍一下作者在代码层面如何实现训练和预测的流程的，参考了作者的darknet版的实现，前面的backbone就是正常的卷积操作，主要的改进是在最后的loss函数计算上，这一部分代码主要在<a href="https://github.com/pjreddie/darknet/blob/master/src/region_layer.c" target="_blank">region_layer</a>中。</p>
+
+<ol>
+<li>当输入的图片size为416x416时，对于全卷积网络而言，其最后一层的输出为13x13x(5x(5+c))，其中C为dataset的类别数，对于voc而言就是20</li>
+<li>将输出的tensor进行拆分，得到x,y,w,h,obj_conf,class_conf这几个子tensor，除了最后一个子tensor的维度为13x13x(5xC)，其他几个子tensor的维度都是13x13x5</li>
+<li>接下去首先看一下yolo的total loss是什么样的，看上去很长的一串，但是仔细拆分的话其实可以看作是三部分损失的加权和。首先我们来看看$\mathbb{1}_{ij}^{obj}$, $\mathbb{1}_{ij}^{noobj}$和$\mathbb{1}_{i}^{obj}$这三个指示符分别代表什么。首先第一个是指当某个gt box落在第i个grid cell中的第j个bounding boxes中时为1，第二个是指第i个grid cell内没有gt box时为1，第三个是指gt box位于第i个grid cell时为1。那么，什么叫第i个grid cell的第j个bounding box内有物体呢？假设有一张大小为416x416的图片，有一个gt box，它的中心点为(100,200)，宽为50，高为100，那么这个中心点就位于第(ceil(<sup>100</sup>&frasl;<sub>416</sub>*13),ceil(<sup>200</sup>&frasl;<sub>416</sub>*13))=(4,7)个cell。但是这个cell中有若干个bounding boxes，文中使用了&rdquo;responsible&rdquo;这个词来表示对预测物体“负责”的bounding box。它是在这若干个bounding boxes中与gt box的iou最大的那个bounding box。对于$\mathbb{1}_{ij}^{noobj}$，并不是简单地对$\mathbb{1}_{ij}^{obj}$进行取反，因为这样做会导致训练时正负比例的差距太过悬殊，因此会将gt box与第i,j个模型预测的pred box计算iou，如果大于阈值，则不再计算这个box的no object loss。也就是说如果某个box既不用对预测物体“负责”，但是这个位置的预测框与gt box的iou又大于一定值，那么它就会被丢弃，也就是不参与任何一项损失的计算。关于最后那个$\mathbb{1}_{i}^{obj}$，其实它是yolo v1的写法，因为yolo v1对每个cell只预测一组class confidence，而到了v2中会对grid cell中的每个anchor box预测一组class confidence。从v2的代码来看，这个其实和第一个$\mathbb{1}_{ij}^{obj}$的取值应该是一样的。
+<img src="https://file.byjiang.com/yolo_005.jpg" alt="" /></li>
+
+<li><p>计算no object loss，这一部分代码<a href="https://github.com/pjreddie/darknet/blob/master/src/region_layer.c#L232-L264" target="_blank">位于</a></p>
+
+<pre><code>//计算no object loss
+for j in range(h):
+    for i in range(w):
+        for n in range(num_anchor):
+            获得当前位置对应的pred_box
+            for truth_box in gt_boxes： //遍历所有的gt boxes
+                计算truth_box与pred_box的iou，保留最大的best_iou
+            如果best_iou大于threshold，忽略，反之则计算这个位置的object confidence的loss
+            对于开始训练后的前12800张图片，即使这个位置没有object，也会额外计算一个坐标的loss
+            使用一个虚拟的truth，它的x,y为cell的中心，w,h为当前anchor的w和h
+            这样做是为了避免在训练的早期阶段网络发散，加快网络的收敛
+</code></pre></li>
+
+<li><p>计算object, coordinate and class loss，这一部分代码<a href="https://github.com/pjreddie/darknet/blob/master/src/region_layer.c#L265-L317" target="_blank">位于</a></p>
+
+<pre><code>//计算object, coordinate and class loss
+for truth_box in gt_boxes:
+    找到truth_box中心坐落在第(i,j)个grid cell中
+    //在这个grid cell中
+    for n in range(num_anchor):
+        获得这个位置的先验anchor框，与truth_box计算iou，保存最大的iou和对应的索引best_n
+        利用i,j,best_n就可以计算对应位置的pred_box与gt_box的
+        object, coordinate和class loss
+</code></pre></li>
+
+<li><p>还有一点需要说明，在上面给的代码中循环条件都写着t&lt;30，是因为作者假设一张图内最多存在30个gt boxes</p></li>
+</ol>
+
+<hr />
+
+<h1 id="references">References</h1>
+
+<ol>
+<li><a href="https://arxiv.org/pdf/1506.02640" target="_blank">https://arxiv.org/pdf/1506.02640</a></li>
+<li><a href="https://arxiv.org/pdf/1612.08242" target="_blank">https://arxiv.org/pdf/1612.08242</a></li>
+<li><a href="https://pjreddie.com/darknet/yolo/" target="_blank">https://pjreddie.com/darknet/yolo/</a></li>
+<li><a href="https://github.com/hgpvision/darknet/blob/master/src/region_layer.c" target="_blank">https://github.com/hgpvision/darknet/blob/master/src/region_layer.c</a></li>
+</ol>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e7%9b%ae%e6%a0%87%e6%a3%80%e6%b5%8b">目标检测</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+<div class="article-container article-widget">
+  <div class="hr-light"></div>
+  <h3>Related</h3>
+  <ul>
+    
+    <li><a href="/2018/11/06/Faster_RCNN/">Faster RCNN</a></li>
+    
+    <li><a href="/2018/11/05/Fast_RCNN/">Fast RCNN</a></li>
+    
+    <li><a href="/2018/11/03/DeepBox/">DeepBox</a></li>
+    
+    <li><a href="/2018/11/01/SPPNet/">SPPNet</a></li>
+    
+    <li><a href="/2018/10/31/DeepMultiBox/">DeepMultiBox</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

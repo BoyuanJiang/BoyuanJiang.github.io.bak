@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/blog/Unbalanced_Dataset/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/blog/Unbalanced_Dataset/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/blog/Unbalanced_Dataset/">
+  <meta property="og:title" content="(转)处理非平衡数据的七个技巧 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2017-06-07T22:36:39&#43;08:00">
+  
+  <meta property="article:modified_time" content="2017-06-07T22:36:39&#43;08:00">
+  
+
+  
+
+  <title>(转)处理非平衡数据的七个技巧 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">(转)处理非平衡数据的七个技巧</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-06-07 22:36:39 &#43;0800 CST" itemprop="datePublished dateModified">
+      Jun 7, 2017
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%28%e8%bd%ac%29%e5%a4%84%e7%90%86%e9%9d%9e%e5%b9%b3%e8%a1%a1%e6%95%b0%e6%8d%ae%e7%9a%84%e4%b8%83%e4%b8%aa%e6%8a%80%e5%b7%a7&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fUnbalanced_Dataset%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2fblog%2fUnbalanced_Dataset%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fUnbalanced_Dataset%2f&amp;title=%28%e8%bd%ac%29%e5%a4%84%e7%90%86%e9%9d%9e%e5%b9%b3%e8%a1%a1%e6%95%b0%e6%8d%ae%e7%9a%84%e4%b8%83%e4%b8%aa%e6%8a%80%e5%b7%a7"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2fblog%2fUnbalanced_Dataset%2f&amp;title=%28%e8%bd%ac%29%e5%a4%84%e7%90%86%e9%9d%9e%e5%b9%b3%e8%a1%a1%e6%95%b0%e6%8d%ae%e7%9a%84%e4%b8%83%e4%b8%aa%e6%8a%80%e5%b7%a7"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%28%e8%bd%ac%29%e5%a4%84%e7%90%86%e9%9d%9e%e5%b9%b3%e8%a1%a1%e6%95%b0%e6%8d%ae%e7%9a%84%e4%b8%83%e4%b8%aa%e6%8a%80%e5%b7%a7&amp;body=https%3a%2f%2fbyjiang.com%2fblog%2fUnbalanced_Dataset%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>在参加数据挖掘比赛中，经常会遇到给的训练集类别非常不平衡的情况，看到一篇关于如何处理这类情况的文章记录在此。
+</p>
+
+<p>原文：<a href="http://www.kdnuggets.com/2017/06/7-techniques-handle-imbalanced-data.html" target="_blank">7 Techniques to Handle Imbalanced Data</a></p>
+
+<p>作者：Ye Wu &amp; Rick Radewagen, IE Business School.
+译者：王安阳</p>
+
+<h2 id="介绍">介绍</h2>
+
+<p>在例如银行欺诈检测、市场实时出价、网络入侵检测等应用场景中，数据集有什么特点？
+这些领域中使用的数据，通常只有不到1%是我们“感兴趣”的（例如：使用信用卡的欺诈数据、用户点击广告的数据、损坏的服务器扫描其网络的数据等）。 然而，大多数机器学习算法对于这种不平衡的数据集不能很好地工作。以下七个技巧可以帮助您训练分类器来检测异常类。</p>
+
+<p><img src="http://oq393r0ea.bkt.clouddn.com/Unbalanced_Dataset_01.jpg" alt="" /></p>
+
+<h2 id="使用正确的评估指标">使用正确的评估指标</h2>
+
+<p>对于使用不平衡数据生成的模型，应用不当的评估指标可能是危险的。想象一下，我们的训练数据如上图所示。 如果使用精度来衡量模型的好坏，将所有测试样本分类为“0”的模型将具有很好的准确性（99.8％），但显然这种模型不会为我们提供任何有价值的信息。
+在这种情况下，可以应用其他评估指标替代，例如：
+- 精确率/特异性：多少个选定的实例是相关的。
+- 召回率/灵敏度：选择了多少个相关实例。
+- F1分数：精确率和召回率的加权平衡。
+- MCC：观察和预测的二分类数据之间的相关系数。
+- AUC：真阳性率与伪阳性率之间的关系。</p>
+
+<h2 id="重抽样">重抽样</h2>
+
+<p>除了使用不同的评估标准外，还可以开发不同的数据集。有两种方法可以从不平衡数据集中生成出平衡的数据集：欠抽样和过抽样。</p>
+
+<h3 id="欠抽样">欠抽样</h3>
+
+<p>欠抽样通过减少多数类（数据量占大多数的类别）的样本量来平衡数据集。当数据量足够大时可以使用此方法。
+通过保存稀有类（数据量占少数的类别）的所有样本，并在多数类中随机选择相等数量的样本，可以提取出新的平衡的数据集用于进一步建模。</p>
+
+<h3 id="过抽样">过抽样</h3>
+
+<p>与欠抽样相对，过抽样适用于数据量不足的情况。它通过增加稀有类的样本量来平衡数据集。新的稀有类数据可以通过复制，自举法或SMOTE[1]（合成过抽样技术）以及其他类似技术来生成。</p>
+
+<p>需要注意，没有一种绝对正确的重抽样方法。如何选用这两种方法取决于应用场合和数据集特点。欠抽样和过抽样相结合也能产生很好的结果。</p>
+
+<h2 id="正确使用k重交叉验证">正确使用K重交叉验证</h2>
+
+<p>值得注意的是，使用过抽样方法来解决不平衡问题时应适当地应用交叉验证。
+要知道过抽样是根据原有稀有类数据的分布函数，自举生成新的随机数据。 如果在过采样之后应用交叉验证，那么我们将引入过拟合于自举数据的结果。 因此在过抽样数据之前必须进行交叉验证，就像实现特征选择一样。只有反复重采样数据，可以将随机性引入到数据集中，以确保不会出现过拟合的问题。</p>
+
+<h2 id="组合不同的重样数据集">组合不同的重样数据集</h2>
+
+<p>泛化模型的最简单的方法是使用更多的数据。问题是，开箱即用的分类器，如逻辑回归或随机森林，倾向于通过丢弃稀有类来泛化。一个简单的最佳实践是建立n个模型，分别使用稀有类的所有样本和多数类的n个不同样本。假设要合并10个模型，你需要选取比如 1000个稀有类样本，10000个多数类样本。然后。只需将10000个案例分成10个块，并训练出10个不同的模型。</p>
+
+<p><img src="http://oq393r0ea.bkt.clouddn.com/Unbalanced_Dataset_02.jpg" alt="" /></p>
+
+<p>这个方法非常简单，并且可以完美地水平扩展到更大的数据量，因此你可以在不同的集群节点分开训练，然后组合优化模型，可操作性很强。</p>
+
+<h2 id="用不同比例重抽样">用不同比例重抽样</h2>
+
+<p>以上的方法可以通过改变稀有类和多数类的样本比例进行微调。 最好的比例在很大程度上取决于所使用的数据和模型。 另外，在不同的分组使用不同的比例，来代替以相同的比例训练所有模型非常值得尝试。 所以如果有10个训练模型，可以有一个模型比例为1：1（稀有：多数），另一个1：3，另一个2：1……，这样做是有意义的。 根据使用的模型，比例可以影响一个类获得的权重。</p>
+
+<p><img src="http://oq393r0ea.bkt.clouddn.com/Unbalanced_Dataset_03.jpg" alt="" /></p>
+
+<h2 id="聚集多数类数据">聚集多数类数据</h2>
+
+<p>Sergey提出了一种优雅的方法[2]。他建议不要依赖随机抽样来覆盖训练样本的变化情形，而是对数据集的多数类进行聚类。 对于每个组，只保留集群中心。然后，仅使用稀有类和聚类中心作为训练数据集。</p>
+
+<p>##设计你自己的模型
+上述的方法都聚焦在数据上，并将模型视为固定的组件。但事实上，如果模型适用于不平衡数据，就不需要重新采样数据了。 著名的XGBoost已经是一个很好的起点，如果数据集没有过度倾斜，因为它内部照顾到训练集的平衡性。实际上，数据仍然被重新采样了，只不过是秘密发生的。</p>
+
+<p>通过设计一个惩罚稀有类的分类错误比多数类分类错误严重的成本函数，可以设计出许多自然泛化的模型。 例如，调整SVM，使用与对稀有类未被代表的比例相关的参数，作为惩罚稀有类的错误分类的参数。</p>
+
+<p><img src="http://oq393r0ea.bkt.clouddn.com/Unbalanced_Dataset_01.jpg" alt="" /></p>
+
+<h2 id="总结">总结</h2>
+
+<p>这不是一个排他性的列表，而是处理不平衡数据的起点。没有适合所有问题的最佳方法或模型。</p>
+
+<p>强烈建议你尝试不同的技术和模型来评估哪些方法最有效。尝试创造性地结合不同的方法。 同样重要的是要注意，在不平衡数据出现的许多领域（例如欺诈检测，即时投标）中，“市场规则”是不断变化的。 所以，需要检查过去的数据是否已经过时。</p>
+      </div>
+
+      
+
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+

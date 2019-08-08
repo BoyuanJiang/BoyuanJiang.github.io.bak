@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/11/25/Normalization/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/11/25/Normalization/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/11/25/Normalization/">
+  <meta property="og:title" content="深度网络中常用的normalization总结 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-11-25T13:06:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-11-25T13:06:00&#43;08:00">
+  
+
+  
+
+  <title>深度网络中常用的normalization总结 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">深度网络中常用的normalization总结</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-11-25 13:06:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Nov 25, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e6%b7%b1%e5%ba%a6%e7%bd%91%e7%bb%9c%e4%b8%ad%e5%b8%b8%e7%94%a8%e7%9a%84normalization%e6%80%bb%e7%bb%93&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f25%2fNormalization%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f25%2fNormalization%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f25%2fNormalization%2f&amp;title=%e6%b7%b1%e5%ba%a6%e7%bd%91%e7%bb%9c%e4%b8%ad%e5%b8%b8%e7%94%a8%e7%9a%84normalization%e6%80%bb%e7%bb%93"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f25%2fNormalization%2f&amp;title=%e6%b7%b1%e5%ba%a6%e7%bd%91%e7%bb%9c%e4%b8%ad%e5%b8%b8%e7%94%a8%e7%9a%84normalization%e6%80%bb%e7%bb%93"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e6%b7%b1%e5%ba%a6%e7%bd%91%e7%bb%9c%e4%b8%ad%e5%b8%b8%e7%94%a8%e7%9a%84normalization%e6%80%bb%e7%bb%93&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f25%2fNormalization%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>今天看了些常用的normalization方法，顺便做个笔记记录一下。
+</p>
+
+<h1 id="local-response-normalization">Local Response Normalization</h1>
+
+<p>LRN最早在AlexNet中出现，它的定义如下，其中$a_{x,y}^i$代表第i个channel，位置为(x,y)的激活值，使用与它在channel上邻近的(-n/2,n/2)个激活值对其进行normalize。$k,\alpha,\beta$都是预先定义好的超参数。
+<img src="https://file.byjiang.com/normalization_001.jpg" alt="" /></p>
+
+<p>但是在vgg的那篇论文中，作者在sec 4.1中提到，使用LRN对结果并没有多大的提升。</p>
+
+<h1 id="batch-normalization">Batch Normalization</h1>
+
+<h2 id="gradient-vanishing">Gradient Vanishing</h2>
+
+<p>深度网络在训练的时候往往存在梯度弥散的问题，尤其是当网络较深的时候，如果使用的是sigmoid激活函数，当每一层的输入绝对值较大的时候，会使输出进入函数的饱和区，在这个区域梯度就会非常小，再反向传播的时候由于连乘，最终传到前面的梯度可能就等于0了。一般为了解决这个问题可以采用这几种方式：</p>
+
+<ol>
+<li>使用ReLU激活</li>
+<li>设计一个好的参数初始化策略</li>
+<li>使用较小的学习速率</li>
+</ol>
+
+<p>可以预见，如果我们可以稳定每一层输入的分布，则可以很大程度的避免训练的时候进入饱和区，加快网络的收敛。
+下面来看一下它的具体做法：</p>
+
+<p>1.首先计算输出的tensor每一维度的均值和方差，对于全连接层，我们的tensor维度一般为[N,D]，其中N为mini-batch的size，我们沿着dimension计算会得到一个D维的mean和一个D维的var。如果位于卷积层，那么输入的维度一般为[N,H,W,C]，其中C为filter的数量，这时候是沿着filter所在的这一维进行计算mean和std，得到两个C维的向量。然后使用公式$\hat{x}^{(k)}=\frac{x^{(k)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}$对每个维度进行归一化。下图分别给出了两种情况下计算mean和var的方式。
+<img src="https://file.byjiang.com/normalization_002.jpg" alt="" />
+2. 通常，我们会把bn放置于全连接或卷积层之后，激活函数之前
+<img src="https://file.byjiang.com/normalization_003.jpg" alt="" />
+3. 如果单纯的对每层进行normalization，可能会破坏网络的表达能力。比如如果使用sigmoid激活，normalization之后会使输入大部分位于线性区域，从而丢失非线性映射的能力，为了避免这个问题，引入了两个可以学习的参数$\gamma,\beta$对normalization后的输出进行放缩和平移：$y^{(k)}=\gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}$。$\gamma,\beta$的shape同之前讨论的mean和var。
+4. 在训练的时候会使用滑动平均的方式维护一个全局的mean和variance，在测试的时候直接使用这个全局的mean和variance进行bn操作
+<img src="https://file.byjiang.com/batch_normalization_01.png" alt="" />
+<img src="https://file.byjiang.com/batch_normalization_02.png" alt="" /></p>
+
+<h1 id="group-normalization">Group Normalization</h1>
+
+<p>Batch normalization有一个问题就是当batch size很小时（很多检测分割还有video的任务中batch size只有1或2），会造成一个batch内的mean和variance的统计不准确，从而使最终的结果变差。在GN中作者说在ResNet-50中，当batch size为2时，使用GN比BN错误率低了10.6%。下面这张图也给出了GN和BN随着batch size变化错误率的变化情况，可以看到GN基本不受batch size变化的影响，而BN当batch size变小时错误率急剧上升。
+<img src="https://file.byjiang.com/normalization_004.jpg" alt="" /></p>
+
+<p>之前，为了解决这个问题，有人提出了synchronized BN，就是说如果我们用8卡训练，每张卡的batch size=2，那么计算mean和variance的时候跨GPU进行计算，这样相当于就把batch size变成了16。这从一定程度上缓解了这一问题，但是这对系统设计提出了新的要求，毕竟需要在不同的卡之间进行同步操作，同时也会使异步梯度下降(asynchronous
+solvers)无法工作了。</p>
+
+<p>GN的原理和BN其实非常的像，只是GN会把所有的channels分成G个group，每个group内有C/G个channels。在计算mean和variance的时候是沿着(H,W)，同时在每张图片的一个C/G个channels的group内计算。因为跟batch size无关了，所以就不需要像bn那样维护两个统计信息，mean和variance供inference的时候使用了。其他的部分和bn基本相同，也有两个可学习的参数$\gamma,\beta$对normalization的参数进行放缩和平移处理。代码的话实现如下：</p>
+
+<pre><code>def GroupNorm(x, gamma, beta, G, eps=1e􀀀5):
+    # x: input features with shape [N,C,H,W]
+    # gamma, beta: scale and offset, with shape [1,C,1,1]
+    # G: number of groups for GN
+    N, C, H, W = x.shape
+    x = tf.reshape(x, [N, G, C // G, H, W])
+    mean, var = tf.nn.moments(x, [2, 3, 4], keep_dims=True)
+    x = (x * mean) / tf.sqrt(var + eps)
+    x = tf.reshape(x, [N, C, H, W])
+    return x * gamma + beta
+</code></pre>
+
+<p>从下面这张图也可以看出几种常见的normalization方法的区别，其中layer norm和instance norm可以看作是group norm的特例，一个是group的数量取1，这样所有的channels都在一个group内进行计算，另一个则是group取C，也就是每个channel单独计算mean和variance。
+<img src="https://file.byjiang.com/normalization_005.jpg" alt="" /></p>
+
+<hr />
+
+<h1 id="references">References</h1>
+
+<ol>
+<li><a href="https://arxiv.org/pdf/1502.03167" target="_blank">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a></li>
+<li><a href="https://arxiv.org/pdf/1803.08494" target="_blank">Group Normalization</a></li>
+<li><a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank">LRN</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/35005794" target="_blank">全面解读Group Normalization(知乎)</a></li>
+</ol>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e5%85%b6%e4%bb%96">其他</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

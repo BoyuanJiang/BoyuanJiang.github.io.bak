@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/11/21/MobileNet/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/11/21/MobileNet/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/11/21/MobileNet/">
+  <meta property="og:title" content="MobileNet v1 &amp; v2 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-11-21T16:05:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-11-21T16:05:00&#43;08:00">
+  
+
+  
+
+  <title>MobileNet v1 &amp; v2 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">MobileNet v1 &amp; v2</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-11-21 16:05:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Nov 21, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=MobileNet%20v1%20%26%20v2&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f21%2fMobileNet%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f21%2fMobileNet%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f21%2fMobileNet%2f&amp;title=MobileNet%20v1%20%26%20v2"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f21%2fMobileNet%2f&amp;title=MobileNet%20v1%20%26%20v2"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=MobileNet%20v1%20%26%20v2&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f21%2fMobileNet%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>MobileNet是Google推出的一种比较适合在移动设备上使用的小型化网络，具有较少的计算量和较低的带宽延迟。目前已经出到了第二版。本文会首先回顾一下v1的设计思想，然后与v2对比看看有什么升级的地方。
+</p>
+
+<h1 id="mobilenet-v1">MobileNet v1</h1>
+
+<h2 id="depthwise-separable-convolution">Depthwise Separable Convolution</h2>
+
+<p>传统的卷积神经网络(如alexnet，vgg等)使用的是标准的卷积层，我们首先计算一下传统的卷积一层的计算量，这里只考虑乘法的计算量：</p>
+
+<blockquote>
+<ul>
+<li>input features: h*w*m</li>
+<li>filters: k*k*m*n</li>
+<li>output features: h*w*n</li>
+<li>compute cost: h*w*k*k*m*n</li>
+</ul>
+</blockquote>
+
+<p>相较于传统的标准卷积，MobileNet v1提出了一种叫Depthwise Separable Convolution的操作，它实际是把标准的卷积层拆分成了两层，第一层称为depthwise convolution，它实际上是在每一个channel(depth)上单独做卷积，可以理解为在一个平面上做卷积。每个卷积核的大小为k*k*1，一共有m个这样的卷积。对于h*w*m的输入，经过depthwise convolution layer之后，输出的feature map为h*w*m，这一层的计算量为h*w*m*k*k。第二层使用若n个1
+*1*m的卷积核进行通道整合，称为pointwise convolution layer。这一层的输出为h*w*n，计算量为h*w*m*n。因此，对于Depthwise Separable Convolution，我们可以得到如下的计算量：</p>
+
+<blockquote>
+<ul>
+<li>input features: h*w*m</li>
+<li>depthwise filters: k*k*1*m</li>
+<li>depthwise output: h*w*m</li>
+<li>pointwise filters: 1*1*m*n</li>
+<li>pointwise output: h*w*n</li>
+<li>compute cost: h*w*k*k*m+h*w*m*n</li>
+</ul>
+</blockquote>
+
+<p>如果我们把Depthwise Separable Convolution的计算量与标准卷积的相除，就可以得到以下的结论：
+$$\frac{h*w*k*k*m+h*w*m*n}{h*w*k*k*m*n}=\frac{1}{n}+\frac{1}{k^2}$$</p>
+
+<p>论文中k=3，n为卷积核的数量，一般是个比较大的数，这样相比于标准卷积，深度分离的卷积计算量只有前者的1/9。较少的乘法计算量带来的好处就是计算的速度大大提升了。因为在卷积的具体实现时，最终调用的都是general matrix multiply
+(GEMM) functions。</p>
+
+<p><img src="https://file.byjiang.com/mobilenet_001.jpg" alt="" /></p>
+
+<h2 id="width-multiplier-thinner-models">Width Multiplier: Thinner Models</h2>
+
+<p>尽管使用深度分离卷积已经大大地减少了计算量，但是作者还另外引入了两个方法来进一步控制计算量。其中第一个参数为width multiplier，$\alpha \in(0,1]$，它的作用是使网络的每一层变得更“瘦”。原文中，作者对于一个channel为m的输入层，输入的channel为$\alpha m$，输出的channel为$\alpha n$。因此计算量变为$h*w*k*k* \alpha m+h*w*\alpha m*\alpha n$，但是从实际实现的代码来看，depthwise那层使用的是控制量为<a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/kernels/depthwise_conv_op.cc#L324" target="_blank">channel_multiplier</a>，是个取值大于等于1的int型变量，只有pointwise那层才有width multiplier这个变量，所以不知道原文中这里是否是写错了？</p>
+
+<h2 id="resolution-multiplier">Resolution Multiplier</h2>
+
+<p>这个比较好理解，就是把输入图片的分辨率进行缩放，$\rho$，这样就使后面每层的计算量都减少了$\rho^2$倍</p>
+
+<h2 id="experiments">Experiments</h2>
+
+<p><img src="https://file.byjiang.com/mobilenet_002.jpg" alt="" />
+上面的两张表格将MobileNet v1与一些常见的标准卷积网络进行了对比，可以得到以下的几点结论：</p>
+
+<ol>
+<li>完整版的MobileNet与VGG 16的性能相当，但是后者的参数量和计算量是前者的十几倍</li>
+<li>0.5x的MobileNet与AlexNet的性能相当，但是后者的参数量与计算量也是前者的几十倍</li>
+<li>同样主打轻量级应用的squeezenet，虽然拥有更少的参数量，但是计算量却非常高，因此看一个网络的大小不能单纯的只看网络的参数量</li>
+</ol>
+
+<p><img src="https://file.byjiang.com/mobilenet_003.jpg" alt="" />
+而在目标检测任务上，相比于使用VGG作为backbone，性能还是有一定差距的，不过与Inception v2差不多。</p>
+
+<h1 id="mobilenet-v2">MobileNet v2</h1>
+
+<p>v2是Google时隔一年后推出的改进版，主要的变化是引入了一种叫inverted residual structure，下面首先介绍一下这种结构与传统的residual structure的异同。</p>
+
+<h2 id="inverted-residual-with-linear-bottlenecks">Inverted Residual with Linear Bottlenecks</h2>
+
+<p>Inverted residual的输入为一个低维的压缩表征，首先会经过一个expansion layer将其在高维展开，然后将expand后的高维特征与之前介绍过的轻量级的lightweight depthwise convolution进行卷积，然后再将卷积后的特征重新映射回低维，其中要注意的是这一层卷积之后并没有跟随任何非线性的激活函数，作者将这个称为linear bottlenecks。我们知道，常见的卷积神经网络每个卷积层之后都会跟随一个非线性激活层，如常用的ReLU，那为什么这里最后一层不使用任何激活呢？</p>
+
+<p>我们知道，ReLU会使特征中小于0的部分都变为0，当特征的channel数较低时，会有相对较高的概率导致某些channel被整体置0，而一旦某个channel都被置0，那么一定就会导致所能描述的特征容量的下降。同时也会使反向时梯度变为0，filter也就学不动了。除了理论上的分析证明，文中也用一个小小的例子对这一现象进行了描述，下图最左边是原始的输入特征，之后分别用一个随机矩阵$T$映射到n维空间，然后跟随一个ReLU激活，时候再用$T^-1$映射回原始的输入空间，可以看到当映射的空间维度较低时（如n=2,3，5）时，映射回原空间后信息丢失量比较多，而映射到较高维的空间后(n=15,30)，则能保留大部分的特征信息。
+<img src="https://file.byjiang.com/mobilenet_004.jpg" alt="" /></p>
+
+<p>这就引出了v2对传统residual structure的第二个改进，即首先会把输入的特征通过1x1的卷积映射到一个高维空间，通过expansion factor $t$进行控制，文中$t=6$，然后在这个高维空间进行depthwise convolution，这样即使使用了RuLU也可以确保大部分信息不丢失，最后再将其映射回输入的低维空间。下图是两种residual structure的对比示意图：
+<img src="https://file.byjiang.com/mobilenet_005.jpg" alt="" />
+可以看到，传统的residual structure是输入和输出的channel较多，而中间部分的channel较少，而inverted residual structure则刚好相反，两边channe较少，中间的特征channel比较多。</p>
+
+<p>下面这张图则给出了v2与其他几种网络在convolution blocks设计上的区别：
+<img src="https://file.byjiang.com/mobilenet_006.jpg" alt="" /></p>
+
+<h2 id="running-time-cost">Running time cost</h2>
+
+<p>假设block的输入为h x w，expansion factor为t，输入的维度为d&rsquo;，输出的维度为d&rdquo;，中间的depthwise convolution filter size为k，那么总的计算量就是：h*w*d&rsquo;*t*(d&rsquo;+k*k+d&rdquo;)。</p>
+
+<h2 id="memory-efficient-inference">Memory efficient inference</h2>
+
+<p>v2还有一个特点就是其对内存带宽比较友好，在文中的section 5.1作者说到</p>
+
+<ul>
+<li>In what follows we show that if we treat a bottleneck residual block as a single operation (and treat inner convolution as a disposable tensor), the total amount of memory would be dominated by the size of bottleneck tensors, rather than the size of tensors that are internal to bottleneck (and much larger).</li>
+</ul>
+
+<p>而v2采用的inverted residual structure在输入和输出的位置维度都比较低，相比于传统的residual structure输入和输出的维度较高，其对带宽的需求明显更少。</p>
+
+<h2 id="experiments-1">Experiments</h2>
+
+<p>作者首先对比了v2与其他网络在ImageNet上的表现，可以看出相比于v1，计算的速度更快了，精度也提高了1个多点。
+<img src="https://file.byjiang.com/mobilenet_007.jpg" alt="" />
+对于不同的shortcut连接还有非线性激活对bottleneck layer的影响，作者分别进行了ablation study，可以看出使用线性激活和较低的维度进行shortcut连接有助于性能的提升。
+<img src="https://file.byjiang.com/mobilenet_008.jpg" alt="" /></p>
+
+<h1 id="conclusions">Conclusions</h1>
+
+<p>MobileNet v1使用depthwise convolution+pointwise convolution在达到相近表达能力的情况下大大减少了卷积层的计算量，而v2提出的inverted residual structure则允许我们将网络的表达(通过expansion layers)与网络的容量(通过bottleneck inputs)进行了解耦。总的来说这是两篇非常不错的paper，推荐大家有时间可以再细细的去看一遍原文。</p>
+
+<hr />
+
+<h1 id="references">References</h1>
+
+<ol>
+<li><a href="https://arxiv.org/pdf/1704.04861" target="_blank">MobileNet v1</a></li>
+<li><a href="https://arxiv.org/pdf/1801.04381" target="_blank">MobileNet v2</a></li>
+<li><a href="https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet" target="_blank">official implement</a></li>
+<li><a href="https://www.zhihu.com/question/265709710" target="_blank">知乎讨论</a></li>
+</ol>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/backbone">backbone</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

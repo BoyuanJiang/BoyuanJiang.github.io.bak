@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/07/20/TinyFlow_2/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/07/20/TinyFlow_2/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/07/20/TinyFlow_2/">
+  <meta property="og:title" content="TinyFlow阅读(2) | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-07-20T21:38:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-07-20T21:38:00&#43;08:00">
+  
+
+  
+
+  <title>TinyFlow阅读(2) | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">TinyFlow阅读(2)</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-07-20 21:38:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Jul 20, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=TinyFlow%e9%98%85%e8%af%bb%282%29&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f07%2f20%2fTinyFlow_2%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f07%2f20%2fTinyFlow_2%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f07%2f20%2fTinyFlow_2%2f&amp;title=TinyFlow%e9%98%85%e8%af%bb%282%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f07%2f20%2fTinyFlow_2%2f&amp;title=TinyFlow%e9%98%85%e8%af%bb%282%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=TinyFlow%e9%98%85%e8%af%bb%282%29&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f07%2f20%2fTinyFlow_2%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>在这篇文章中，主要介绍一下TinyFlow的C代码编译后如何导入python中，从而可以通过python的api调用这些基于C的函数。
+</p>
+
+<p>在<a href="https://byjiang.com/2018/07/11/TinyFlow_1/" target="_blank">第一篇文章</a>中，我们介绍了如何编译TinyFlow，假设你已经顺利编译了TinyFlow，那么在源代码的lib目录下应该会有一个libtinyflow.so的文件。当我们在python中使用时，一般首先会导入tinyflow</p>
+
+<pre><code>import tinyflow as tf
+</code></pre>
+
+<p>上述代码会导入以下的代码</p>
+
+<pre><code>&quot;&quot;&quot;Tinyflow trial.&quot;&quot;&quot;
+from __future__ import absolute_import as _abs
+from . import _base
+from nnvm.symbol import *
+from . import nn
+from . import train
+
+from ._base import *
+from ._ops import *
+
+from ._session import Session
+
+from ._util import infer_variable_shapes
+</code></pre>
+
+<p>其中，在_basy.py的第20行有<code>__builtin__.NNVM_LIBRARY_NAME = &quot;libtinyflow&quot;</code>，也就是将要导入的c库文件的名字。然后在nnvm/_base.py的43行中调用<code>_LIB = _load_lib()</code>使用<a href="https://docs.python.org/3/library/ctypes.html#loading-shared-libraries" target="_blank"><code>ctypes.CDLL</code></a>的方式进行导入。</p>
+
+<p>接下去，需要将使用C语言写的op注册为python可以调用的形式，这一部分的代码在nnvm/symbol.py的338行<code>_init_symbol_module(Symbol, &quot;nnvm&quot;)</code>，其具体实现在nnvm/_ctypes/symbol.py中，如下：</p>
+
+<pre><code>def _init_symbol_module(symbol_class, root_namespace):
+    &quot;&quot;&quot;List and add all the atomic symbol functions to current module.&quot;&quot;&quot;
+    _set_symbol_class(symbol_class)
+    plist = ctypes.POINTER(ctypes.c_char_p)()
+    size = ctypes.c_uint()
+
+    check_call(_LIB.NNListAllOpNames(ctypes.byref(size),
+                                     ctypes.byref(plist)))
+    op_names = []
+    for i in range(size.value):
+        op_names.append(py_str(plist[i]))
+
+    module_obj = sys.modules[&quot;%s.symbol&quot; % root_namespace]
+    module_internal = sys.modules[&quot;%s._symbol_internal&quot; % root_namespace]
+    for name in op_names:
+        hdl = OpHandle()
+        check_call(_LIB.NNGetOpHandle(c_str(name), ctypes.byref(hdl)))
+        function = _make_atomic_symbol_function(hdl, name)
+        if function.__name__.startswith('_'):
+            setattr(module_internal, function.__name__, function)
+        else:
+            setattr(module_obj, function.__name__, function)
+</code></pre>
+
+<p>将<code>plist</code>定义为C语言中的字符指针，<code>size</code>为一个无符号整型，然后调用<code>_LIB.NNListAllOpNames(ctypes.byref(size), ctypes.byref(plist))</code>获得op的数量和所有op集和的列表。其实现在nnvm/src/c_api/c_api_symbolic.cc中：</p>
+
+<pre><code>int NNListAllOpNames(nn_uint *out_size,
+                     const char*** out_array) {
+  API_BEGIN();
+  NNAPIThreadLocalEntry *ret = NNAPIThreadLocalStore::Get();
+  ret-&gt;ret_vec_str = dmlc::Registry&lt;Op&gt;::ListAllNames();
+  ret-&gt;ret_vec_charp.clear();
+  for (size_t i = 0; i &lt; ret-&gt;ret_vec_str.size(); ++i) {
+    ret-&gt;ret_vec_charp.push_back(ret-&gt;ret_vec_str[i].c_str());
+  }
+  *out_array = dmlc::BeginPtr(ret-&gt;ret_vec_charp);
+  *out_size = static_cast&lt;nn_uint&gt;(ret-&gt;ret_vec_str.size());
+  API_END();
+}
+</code></pre>
+
+<p>然后使用一个for循环将所有op的name保存到python列表op_names中，对于每一个op，首先初始化为<code>OpHandle()</code>，它对应的C type为<code>void *</code>，之后使用<code>_LIB.NNGetOpHandle(c_str(name), ctypes.byref(hdl))</code>就可以得到每个op对应的函数操作的handle，其实现也在nnvm/src/c_api/c_api_symbolic.c中：</p>
+
+<pre><code>int NNGetOpHandle(const char* op_name,
+                  OpHandle* op_out) {
+  API_BEGIN();
+  *op_out = (OpHandle)Op::Get(op_name);  // NOLINT(*)
+  API_END();
+}
+</code></pre>
+
+<p>那么，如何根据op_name得到对应的op呢？或者说，每个op对应的名字在哪里注册的呢？
+其实，所有的op都是在src/op_tensor.cc中注册的。以标量相加这个op为例，在op_tensor.cc中，它注册的名字为<code>__add_scalar__</code>：</p>
+
+<pre><code>NNVM_REGISTER_OP(__add_scalar__)
+.describe(&quot;add symbol with scalar&quot;)
+.set_num_inputs(1)
+.include(&quot;ElementwiseOpAttr&quot;)
+.set_attr&lt;FInplaceOption&gt;(&quot;FInplaceOption&quot;, InplaceIn0Out0)
+.set_attr&lt;FGradient&gt;(
+    &quot;FGradient&quot;, [](const NodePtr&amp; n,
+                    const std::vector&lt;NodeEntry&gt;&amp; ograds){
+      return std::vector&lt;NodeEntry&gt;{ograds[0]};
+});
+</code></pre>
+
+<p>通过op的name返回了对应的handle后，使用<code>function = _make_atomic_symbol_function(hdl, name)</code>创建一个原子符号函数(atomic symbol function)，主要是对op进行了一层封装。最后将所有的内部op（如<strong>add</strong>scalar<strong>,</strong>sub<strong>symbol</strong>等）加入名为<code>nnvm._symbol_internal</code>的<code>sys.modules</code>列表中，将其他与网络相关的操作（如conv2d, max_pool，linear等）加入名为<code>nnvm.symbol</code>的<code>sys.modules</code>列表中。</p>
+
+<p>至此完成了将使用C写的op导入到python中的工作，之后，我们就可以如<code>tf.nn.linear(),tf.tanh()</code>等python api构建网络了。</p>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e6%ba%90%e7%a0%81%e5%ad%a6%e4%b9%a0">源码学习</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+<div class="article-container article-widget">
+  <div class="hr-light"></div>
+  <h3>Related</h3>
+  <ul>
+    
+    <li><a href="/2018/07/11/TinyFlow_1/">TinyFlow阅读(1)</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

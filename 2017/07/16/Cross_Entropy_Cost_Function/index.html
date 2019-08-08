@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2017/07/16/Cross_Entropy_Cost_Function/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2017/07/16/Cross_Entropy_Cost_Function/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2017/07/16/Cross_Entropy_Cost_Function/">
+  <meta property="og:title" content="为什么选择交叉熵(Cross Entropy)代价函数 | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2017-07-16T19:20:06&#43;08:00">
+  
+  <meta property="article:modified_time" content="2017-07-16T19:20:06&#43;08:00">
+  
+
+  
+
+  <title>为什么选择交叉熵(Cross Entropy)代价函数 | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">为什么选择交叉熵(Cross Entropy)代价函数</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-07-16 19:20:06 &#43;0800 CST" itemprop="datePublished dateModified">
+      Jul 16, 2017
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9%e4%ba%a4%e5%8f%89%e7%86%b5%28Cross%20Entropy%29%e4%bb%a3%e4%bb%b7%e5%87%bd%e6%95%b0&amp;url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f16%2fCross_Entropy_Cost_Function%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f16%2fCross_Entropy_Cost_Function%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f16%2fCross_Entropy_Cost_Function%2f&amp;title=%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9%e4%ba%a4%e5%8f%89%e7%86%b5%28Cross%20Entropy%29%e4%bb%a3%e4%bb%b7%e5%87%bd%e6%95%b0"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f16%2fCross_Entropy_Cost_Function%2f&amp;title=%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9%e4%ba%a4%e5%8f%89%e7%86%b5%28Cross%20Entropy%29%e4%bb%a3%e4%bb%b7%e5%87%bd%e6%95%b0"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9%e4%ba%a4%e5%8f%89%e7%86%b5%28Cross%20Entropy%29%e4%bb%a3%e4%bb%b7%e5%87%bd%e6%95%b0&amp;body=https%3a%2f%2fbyjiang.com%2f2017%2f07%2f16%2fCross_Entropy_Cost_Function%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>在训练网络时，特别是分类问题，我们常常选中交叉熵作为代价函数，那么和其他的代价函数(如均方误差)相比，交叉熵代价函数有什么优点呢？
+
+假设有一个带可学习的权值$w$和偏置$b$的神经元，输入x，输出为z，即$z=wx+b$，然后使用sigmoid函数激活，那么最终的输出如下，其中$\sigma(z) = \frac{1}{1+e^{-z}}$为sigmoid函数
+$$a=\sigma(z) \tag{1}$$
+为了简化分析，我们假设需要让神经元学习当输入$x=1$时，输出$y=0$。首先我们假设使用一般的均方误差作为代价函数时
+$$ C = \frac{(y-a)^2}{2} \tag{2}$$
+其中$y$为实际希望的输出值，$a$为神经元真实输出值。根据链式法则求导，有
+$$ \frac{\partial C}{\partial w}  = (a-y)\sigma&rsquo;(z) x = a \sigma&rsquo;(z) \\
+\frac{\partial C}{\partial b} = (a-y)\sigma&rsquo;(z) = a \sigma&rsquo;(z) \tag{3}$$
+分析(3)式发现，在网络训练开始时，由于参数的随机初始化，$z$可能会较大，使$\sigma(z)$的激活进入饱和区(即下图中偏右侧部分)，从而是其梯度$\sigma&rsquo;(z)$接近于0，无法提供足够的梯度供网络进行参数的学习和更新，导致初始阶段网络的学习会非常的慢。
+<img src="https://file.byjiang.com/20170716001.jpg" alt="sogmoid" />
+而交叉熵代价函数的进入，则很好的解决了这一问题。首先，交叉熵代价函数的定义如式(4)
+$$C = -\frac{1}{n} \sum_x \left[y \ln a + (1-y ) \ln (1-a) \right] \tag{4}$$
+我们再次利用链式法则对(4)式进行求导分析
+$$\frac{\partial C}{\partial w_j}  =  -\frac{1}{n} \sum_x \left( \frac{y }{\sigma(z)} -\frac{(1-y)}{1-\sigma(z)} \right) \frac{\partial \sigma}{\partial w_j} \\  =  -\frac{1}{n} \sum_x \left( \frac{y}{\sigma(z)} -\frac{(1-y)}{1-\sigma(z)} \right)\sigma&rsquo;(z) x_j \<br />
+=\frac{1}{n} \sum_x \frac{\sigma&rsquo;(z) x_j}{\sigma(z) (1-\sigma(z))} (\sigma(z)-y) \tag{5}$$
+此外，还应注意到$\sigma(z)$的导数化简后具有很简洁的形式
+$$\sigma&rsquo;(z) = (\frac{1}{1+e^{-z}})&rsquo; = \frac{e^{-z}}{(1+e^{-z})^2} \<br />
+= (1-\frac{1}{1+e^{-z}}) \frac{1}{1+e^{-z}} = (1-\sigma(z))\sigma(z) \tag{5}$$
+将(5)代入(4)中，最终可以得到非常简洁的化简结果
+$$\frac{\partial C}{\partial w_j} = \frac{1}{n} \sum_x x_j(\sigma(z)-y) \tag{6}$$
+同理可得到对$b_j$的偏导数
+$$\frac{\partial C}{\partial b} = \frac{1}{n} \sum_x (\sigma(z)-y) \tag{7}$$
+分析(6)(7)式发现，当我们使用交叉熵作为代价函数时，由于$\sigma(z)$导数的特殊形式，可以抵消交叉熵代价函数的导数中$\sigma&rsquo;(z)$这一项，从而避免了某些情况下$\sigma(z)$进入饱和区而导致梯度消失的情况。此外，当误差较大时，也就是$\sigma(z)-y$较大时，其梯度也较大，从而可以实现误差较大时网络的学习速率也较快，从而加速网络的收敛。</p>
+
+<p>因此，在处理分类问题上，我们通常选择交叉熵作为网络的代价函数。</p>
+      </div>
+
+      
+
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

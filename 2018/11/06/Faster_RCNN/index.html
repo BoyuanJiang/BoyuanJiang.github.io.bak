@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/2018/11/06/Faster_RCNN/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/2018/11/06/Faster_RCNN/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/2018/11/06/Faster_RCNN/">
+  <meta property="og:title" content="Faster RCNN | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-11-06T21:03:00&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-11-06T21:03:00&#43;08:00">
+  
+
+  
+
+  <title>Faster RCNN | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">Faster RCNN</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-11-06 21:03:00 &#43;0800 CST" itemprop="datePublished dateModified">
+      Nov 6, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Faster%20RCNN&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f06%2fFaster_RCNN%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f06%2fFaster_RCNN%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f06%2fFaster_RCNN%2f&amp;title=Faster%20RCNN"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f06%2fFaster_RCNN%2f&amp;title=Faster%20RCNN"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Faster%20RCNN&amp;body=https%3a%2f%2fbyjiang.com%2f2018%2f11%2f06%2fFaster_RCNN%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>Faster RCNN是RCNN系列的第三篇，提出了Region Proposal Networks(RPN)替代传统的Selective Search算法，将检测的速度提升到了5fps.
+</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>在fast rcnn中，通过共享卷积层，在不计算region proposal的情况下，整个网络的速度已经近乎达到了实时。因此整个检测的瓶颈目前就在region proposal上了。在fast rcnn中，region proposal使用的是selective search算法，其在cpu上运行处理单张图片需要2s。尽管我们可以用gpu重写这一操作让它快一些，但是这并不能从根本上解决这一问题。因此本文从根本出发，既然深度神经网络这么强大，我们是否可以直接用它来完成region proposal的过程呢？答案是肯定的，本文中，作者就提出了一种叫RPN的网络来完成这一目的。这样，整个检测过程的所有部件都可以运行在GPU上了，速度也因此可以达到近乎实时。</p>
+
+<h1 id="architecture">Architecture</h1>
+
+<p><img src="https://file.byjiang.com/faster_rcnn_001.jpg" alt="" />
+整个网络的结构如上图所示，其与fast rcnn最大的区别在于RPN网络的引进。RPN网络有点类似于最近很火的注意力机制，告诉后面的分类网需要聚焦在feature map的哪块区域。</p>
+
+<h2 id="rpn">RPN</h2>
+
+<p>首先让我们看看RPN网络到底是个什么东西，想明白后其实它的思想非常的简单，实现也非常的简单粗暴。以下面这张图为例
+<img src="https://file.byjiang.com/faster_rcnn_002.jpg" alt="" />
+图中的conv feature map是backbone的最后一个卷积层，用一个3x3的卷积核作为sliding window在这个特征图上滑动，它的输出channel是256，然后对这个输出的特征向量分出两条1x1卷积的支路，一条输出的channel为2k用来预测这个anchor box是否有目标，另一条支路为每个anchor box输出4个坐标信息，共4k个channel。因为faster rcnn训练和测试的时候都只使用单一尺度的图片，为了达到多尺度的目的，就在anchor box上进行了scale和aspect ratio的变化。文中取了三种不同的scale和三种不同的aspect ratio，因此这里的k=9。这里的anchor box可以这样理解，假设图中sliding window的中间点(anchor)坐标为(50,50)，那么对于一个16x16的anchor box，这个anchor对应的box区域就应该是左上(42,42)，右下(58,58)。其他尺寸的anchor box同理可以计算出它在原图上对应的区域。这样划分的anchor box在原图上是呈现为网格状的，可能不能很好地整好覆盖每个目标，因此我们的RPN网络就是希望能够学习一个偏移量，对大概覆盖某个目标的box进行修正，使其更好地覆盖这个目标。</p>
+
+<p>如果用PyTorch，则可以这样实现，代码<a href="https://github.com/open-mmlab/mmdetection/blob/master/mmdet/models/rpn_heads/rpn_head.py" target="_blank">来自</a></p>
+
+<pre><code class="language-python">self.rpn_conv = nn.Conv2d(in_channels, feat_channels, 3, padding=1)
+self.relu = nn.ReLU(inplace=True)
+self.num_anchors = len(self.anchor_ratios) * len(self.anchor_scales)
+out_channels = (self.num_anchors
+                if self.use_sigmoid_cls else self.num_anchors * 2)
+self.rpn_cls = nn.Conv2d(feat_channels, out_channels, 1)
+self.rpn_reg = nn.Conv2d(feat_channels, self.num_anchors * 4, 1)
+</code></pre>
+
+<h3 id="loss-function">Loss function</h3>
+
+<p>为了训练RPN，我们首先需要给每个anchor box赋予一个二值的标签(是目标或不是目标)。文中按照以下的几个策略进行标签分配：</p>
+
+<ol>
+<li>跟某个gt box的IoU最大的那个anchor box赋予positive label</li>
+<li>如果一个anchor box跟任意一个gt box IoU超过0.7赋予positive label</li>
+<li>如果跟所有的gt boxes的IoU小于0.3赋予negative label</li>
+</ol>
+
+<p>分配完标签后，可以定义如下的损失函数：
+<img src="https://file.byjiang.com/faster_rcnn_003.jpg" alt="" />
+其中，$L_{cls}$是对anchor box中是否为目标分类的损失，$L_{reg}$是对anchor box坐标修正系数的预测损失，使用的是同fast rcnn一样的smooth L1 loss，注意到第二项损失函数中有一项$p_i^*$，也就是说当该anchor box为positive时才会计算对应的regression loss。关于坐标修正系数的gt，$t_i^*$，由以下的公式得到：
+<img src="https://file.byjiang.com/faster_rcnn_004.jpg" alt="" />
+其中$x,y,w,h$分别为anchor box的中心坐标和宽，长。$x,x_a,x^*$分别为RPN网络的输出，anchor box和gt box。</p>
+
+<h1 id="training">Training</h1>
+
+<p>关于网络的训练，作者提出了几种不同的训练pipeline，其中比较好的方法是将RPN和Fast RCNN的训练合到一个网络中，在前向的时候，首先假设RPN网络的参数是固定的，这样就可以得到一系列的proposals，计算RPN网络的损失，然后利用这些proposals训练fast rcnn网络，将损失函数组合到一块后进行反向传播，同时更新RPN和fast rcnn部分的参数。</p>
+
+<p>其他一些实现上的细节可以参考论文的Section 3.3</p>
+
+<h1 id="experiments">Experiments</h1>
+
+<p>实验结果也请看原文吧，反正就是相比前两个方法速度快了很多，精度也有了提升。</p>
+
+<hr />
+
+<h1 id="reference">Reference</h1>
+
+<ol>
+<li><a href="https://arxiv.org/pdf/1506.01497.pdf" target="_blank">https://arxiv.org/pdf/1506.01497.pdf</a></li>
+</ol>
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/%e7%9b%ae%e6%a0%87%e6%a3%80%e6%b5%8b">目标检测</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+<div class="article-container article-widget">
+  <div class="hr-light"></div>
+  <h3>Related</h3>
+  <ul>
+    
+    <li><a href="/2018/11/05/Fast_RCNN/">Fast RCNN</a></li>
+    
+    <li><a href="/2018/11/03/DeepBox/">DeepBox</a></li>
+    
+    <li><a href="/2018/11/01/SPPNet/">SPPNet</a></li>
+    
+    <li><a href="/2018/10/31/DeepMultiBox/">DeepMultiBox</a></li>
+    
+    <li><a href="/2018/10/30/OverFeat/">OverFeat</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2019 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+

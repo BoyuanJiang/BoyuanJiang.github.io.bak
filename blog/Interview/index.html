@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.32.3" />
+  <meta name="author" content="Boyuan Jiang">
+  <meta name="description" content="Graduate of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://byjiang.com/blog/Interview/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/academicons/1.8.1/css/academicons.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-113237942-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="/libs/autotrack/2.4.1/autotrack.js"></script>
+    
+  
+
+  
+  <link rel="alternate" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  <link rel="feed" href="https://byjiang.com/index.xml" type="application/rss+xml" title="进击的加菲猫">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://byjiang.com/blog/Interview/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="进击的加菲猫">
+  <meta property="og:url" content="https://byjiang.com/blog/Interview/">
+  <meta property="og:title" content="机器学习相关面试题整理(2017/9/24) | 进击的加菲猫">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2017-09-24T00:05:26&#43;08:00">
+  
+  <meta property="article:modified_time" content="2017-09-24T00:05:26&#43;08:00">
+  
+
+  
+
+  <title>机器学习相关面试题整理(2017/9/24) | 进击的加菲猫</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">进击的加菲猫</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/blog/">
+            
+            <span>Blog</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#news">
+            
+            <span>News</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">机器学习相关面试题整理(2017/9/24)</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-09-24 00:05:26 &#43;0800 CST" itemprop="datePublished dateModified">
+      Sep 24, 2017
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Boyuan Jiang">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%9b%b8%e5%85%b3%e9%9d%a2%e8%af%95%e9%a2%98%e6%95%b4%e7%90%86%282017%2f9%2f24%29&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fInterview%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbyjiang.com%2fblog%2fInterview%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbyjiang.com%2fblog%2fInterview%2f&amp;title=%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%9b%b8%e5%85%b3%e9%9d%a2%e8%af%95%e9%a2%98%e6%95%b4%e7%90%86%282017%2f9%2f24%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fbyjiang.com%2fblog%2fInterview%2f&amp;title=%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%9b%b8%e5%85%b3%e9%9d%a2%e8%af%95%e9%a2%98%e6%95%b4%e7%90%86%282017%2f9%2f24%29"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%9b%b8%e5%85%b3%e9%9d%a2%e8%af%95%e9%a2%98%e6%95%b4%e7%90%86%282017%2f9%2f24%29&amp;body=https%3a%2f%2fbyjiang.com%2fblog%2fInterview%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <p>一些机器学习相关面试问题的收集与整理。
+</p>
+
+<hr />
+
+<p>以下内容转载自cc98 @果酱(2017/9/24)</p>
+
+<p><strong>网易智能与感知中心&mdash;计算机视觉算法工程师</strong></p>
+
+<p>技术面大概内容：</p>
+
+<ul>
+<li>项目详细内容</li>
+<li>了解gans么？</li>
+<li>softmax推导一下</li>
+<li>BN层的实现细节</li>
+<li>caffe中卷积层的实现</li>
+<li>有哪些防止过拟合方法</li>
+</ul>
+
+<p><strong>网易游戏雷火&mdash;人工智能工程师</strong></p>
+
+<p>面试大概内容：</p>
+
+<ul>
+<li>项目详细内容</li>
+<li>智力题，两个人拿金币，一次只能拿一个或者两个，最后拿光的人赢，怎样才能保证赢？</li>
+<li>c++虚函数机制</li>
+<li>c++中static作用</li>
+<li>最大子矩阵和</li>
+<li>gans了解么，讲一下原理</li>
+<li>对游戏有没有兴趣，玩过哪些游戏</li>
+<li>聊天&hellip;</li>
+</ul>
+
+<p><strong>阿里菜鸟&mdash;计算机视觉算法工程师</strong></p>
+
+<p>技术面大概内容：</p>
+
+<ul>
+<li>项目详细内容</li>
+<li>项目改进点</li>
+<li>c++ 中static, 全局变量</li>
+<li>虚函数机制</li>
+<li>convolution实现</li>
+<li>deconvolution实现</li>
+<li>反向传播过程</li>
+<li>BN层work的原理</li>
+</ul>
+
+<p><strong>腾讯视频&mdash;基础研究</strong></p>
+
+<p>技术面大概内容，去那边应该是做视频推荐之类的：</p>
+
+<ul>
+<li>项目详细内容</li>
+<li>卷积层为什么能work，在所有数据上都可以用吗？</li>
+<li>dropout的原理</li>
+<li>lstm之类的rnn模型了解么</li>
+<li>给了个视频推荐的场景，问有什么好的做推荐的思路？</li>
+<li>随机森林</li>
+<li>看过的最新的论文</li>
+<li>有序数组，旋转一下，查找某个数</li>
+<li>字符串去空格</li>
+<li>智力题，有n瓶水，有一瓶有毒，用几只老鼠可以找出
+<br /></li>
+</ul>
+
+<p><strong>百度IDL&mdash;视觉算法工程师</strong></p>
+
+<p>电话面试：</p>
+
+<ul>
+<li>项目介绍</li>
+<li>对像素级learning任务的总结</li>
+<li>BN层最新被验证有损信息传播，如何看</li>
+<li>msra论文deformable cnn</li>
+<li>cvpr best paper&mdash;densenet</li>
+<li>模型训练技巧</li>
+<li>给定一个词典，和两个单词A, B. 每次只能改变一个字母，求A在词典中变换为B所需的最小次数</li>
+</ul>
+
+<p>coding题：</p>
+
+<ul>
+<li>实现一个卷积操作&hellip;</li>
+<li>有一颗分类树，每个节点有不确定个孩子，每个节点的内容表示该类的数目。自定义数据结构，进行剪枝，使得每个节点的数目大于一个阈值。有点类似ml里面树的剪枝</li>
+<li>数组形式的a[j][k][w]改用指针形式来访问</li>
+<li>有序数组，旋转后查找一个数</li>
+<li>循环有序链表，插入一个数</li>
+<li>判断一个数是不是2的指数次方的值</li>
+<li>c++ volatile</li>
+<li>堆和栈区别，谁更快？为什么？操作系统cache机制？</li>
+</ul>
+
+<p>总监面：</p>
+
+<ul>
+<li>详细画一下项目用的模型结构图</li>
+<li>做depth恢复还有什么改进思路？</li>
+</ul>
+
+<p><strong>网易智能与感知中心&mdash;视觉算法工程师</strong></p>
+
+<p>两轮技术面：</p>
+
+<ul>
+<li>详细项目介绍</li>
+<li>介绍下在阿里实习的工作</li>
+<li>画一下YOLO V2的结构，实习期间做的改进之处在哪儿？</li>
+<li>说一下基本的网络结构模型，各自优缺点，今年cvpr best paper&mdash;densenet?</li>
+<li>BN为什么会损坏语义信息</li>
+</ul>
+
+<p><strong>腾讯优图&mdash;基础研究</strong></p>
+
+<p>内容：</p>
+
+<ul>
+<li>模型精简加速做过么</li>
+<li>有哪些加速方案</li>
+<li>工程上的加速？模型结构上的加速？network-in-network?</li>
+<li>聊天&hellip;</li>
+</ul>
+      </div>
+
+      
+
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js"></script>
+    <script src="/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      
+      <script src="/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      
+
+      
+      <script src="https://byjiang.com/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+    
+
+  </body>
+</html>
+
